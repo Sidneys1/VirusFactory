@@ -1,4 +1,5 @@
 ﻿using System;
+using VirusFactory.Model.Interface;
 
 namespace VirusFactory.Model.Geography
 {
@@ -28,9 +29,9 @@ namespace VirusFactory.Model.Geography
             return dist;
 		}
 
-		public static double Distance(Point p1, Point p2)
+		public static double Distance(T p1, T p2)
 		{
-			return Distance(p1.Y, p1.X, p2.Y, p2.X);
+			return Distance(p1.Latitude, p1.Longitude, p2.Latitude, p2.Longitude);
 		}
 
 		private static double Deg2Rad(double deg)

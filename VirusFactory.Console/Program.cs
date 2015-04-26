@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using MoreLinq;
+using VirusFactory.Model.Algorithm;
 using VirusFactory.Model.Geography;
 using static System.Console;
 
-namespace VirusFactory.Console
-{
-	class Program
-	{
-		static void Main()
-		{
+namespace VirusFactory.Console {
+	class Program {
+		static void Main() {
 			var cs = Country.LoadCountries("countries.dat", "cities");
 
 			Stats(cs);
@@ -22,14 +20,12 @@ namespace VirusFactory.Console
 
 			var running = true;
 
-			do
-			{
+			do {
 				Write("Enter a country: ");
 				var str = ReadLine();
 				Country selectedCountry = null;
-				City[] cities=null;
-				switch (str?.Trim().ToUpper() ?? "QUIT")
-				{
+				City[] cities = null;
+				switch (str?.Trim().ToUpper() ?? "QUIT") {
 					case "EXIT":
 					case "QUIT":
 						running = false;
@@ -41,23 +37,20 @@ namespace VirusFactory.Console
 					default:
 						var str1 = str;
 						selectedCountry = cs.Where(o => o.Name == str1).RandomSubset(1).First();
-						if (selectedCountry == null)
-						{
+						if (selectedCountry == null) {
 							WriteLine("Cound not find country, selecting random...");
 							goto case "";
 						}
 
 						Write("Enter two cities, separated by ',' (e.g. New York,Philadelphia): ");
 						str = ReadLine();
-						switch ((str?.Trim() ?? ""))
-						{
+						switch ((str?.Trim() ?? "")) {
 							case "":
 								cities = selectedCountry.Cities.RandomSubset(2).ToArray();
 								break;
 							default:
 								cities = str?.Split(',').Select(o => selectedCountry.Cities.FirstOrDefault(p => p.Name == o)).ToArray();
-								if (cities==null || cities.Any(o=>o==null))
-								{
+								if (cities == null || cities.Any(o => o == null)) {
 									WriteLine("Cound not find a city, selecting random...");
 									goto case "";
 								}
@@ -66,19 +59,30 @@ namespace VirusFactory.Console
 
 						break;
 				}
-				if (!running)continue;				
+				if (!running) continue;
 				Debug.Assert(selectedCountry != null, "selectedCountry != null");
 				Debug.Assert(cities != null, "cities != null");
-				var path = DijkstraHelper<City>.CalculateShortestPathBetween(cities[0], cities[1], selectedCountry.Highways);
+
+				var path = AStar.FindPath(cities[0], cities[1], (city, city1) => {
+					if (!city.Distances.ContainsKey(city1))
+						city.Distances.Add(city1, Connection<City>.Distance(city, city1));
+
+					return city.Distances[city1];
+				}, city => {
+					if (!city.Distances.ContainsKey(cities[1]))
+						city.Distances.Add(cities[1], Connection<City>.Distance(city, cities[1]));
+
+					return city.Distances[cities[1]] * 1.1;
+				});
+
+				//var path = DijkstraHelper<City>.CalculateShortestPathBetween(cities[0], cities[1], selectedCountry.Highways);
 				WriteLine(
-					$"Ron is travelling from {cities[0].Name} to {cities[1].Name} in {selectedCountry.Name}. His route is {path.Sum(o => o.Length):#.##}km long:");
-				foreach (var connection in path)
-					WriteLine($"\t{connection.Length,8:#.##}km: {connection.LocationA.Name} -> {connection.LocationB.Name}");
+					$"Ron is travelling from {cities[0].Name} to {cities[1].Name} in {selectedCountry.Name}. His route is {path.TotalCost:#.##}km long:");
+				WriteLine($"\t{path:#.#km}");
 			} while (running);
 		}
 
-		private static void Stats(List<Country> cs)
-		{
+		private static void Stats(List<Country> cs) {
 			WriteLine($"Island Nations:{Environment.NewLine}\t{cs.Count(o => o.BorderCountries.Count == 0)}");
 			WriteLine($"Landlocked Nations:{Environment.NewLine}\t{cs.Count(o => !o.Ocean)}");
 			WriteLine(

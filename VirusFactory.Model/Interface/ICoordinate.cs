@@ -1,4 +1,4 @@
-﻿namespace VirusFactory.Model.Geography
+﻿namespace VirusFactory.Model.Interface
 {
 	public interface ICoordinate
 	{

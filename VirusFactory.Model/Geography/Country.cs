@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using FortuneVoronoi;
+using MIConvexHull.ConvexHull;
+using MoreLinq;
+using VirusFactory.Model.Interface;
 
 namespace VirusFactory.Model.Geography {
 	public class Country : IHasNeighbors<Country> {
@@ -13,7 +17,7 @@ namespace VirusFactory.Model.Geography {
 
 		public List<Country> BorderCountries { get; } = new List<Country>();
 		public List<City> Cities { get; } = new List<City>();
-		//public List<Connection<City>> Highways { get; } = new List<Connection<City>>();
+		public Dictionary<Country, City> Outbound { get; } = new Dictionary<Country, City>();
 
 		public static List<Country> LoadCountries(string countriesFile, string citiesFolder) {
 			var cs = new List<Country>();
@@ -77,6 +81,8 @@ namespace VirusFactory.Model.Geography {
 				} else
 					Console.WriteLine($"Missing city file {country.Name}.dat");
 
+				cs.Where(o => o.Cities.Count > 0).SelectMany(o => ConvexHull.Create(o.Cities).Points).ForEach(o => o.IsHull = true);
+
 				//Load borders
 				if (!bordersTemp.ContainsKey(country.Name)) continue;
 				foreach (var s in bordersTemp[country.Name]) {
@@ -89,24 +95,19 @@ namespace VirusFactory.Model.Geography {
 				}
 			}
 
-			//foreach (var c in cs)
-			//{
-			//	Console.WriteLine(
-			//		$"Loaded '{c.Name}' with {c.BorderCountries.Count} borders, {c.Cities.Count} cities, and {c.Highways.Count} highways.");
-			//}
+			// Outbound
+			foreach (var source in cs.Where(o => o.Cities.Count != 0 && o.BorderCountries.Count != 0)) {
+				foreach (var source1 in source.BorderCountries.Where(o => o.Cities.Count != 0 && !source.Outbound.ContainsKey(o))) {
+					var graph = Fortune.ComputeVoronoiGraph(source.Cities.Union(source1.Cities).Where(o => o.IsHull).Select(o => new Vector(o.Position) { Tag = o }));
+					var voronoiEdge = graph.Edges.Where(o => ((City)o.LeftData.Tag).Country != ((City)o.RightData.Tag).Country)
+						.MinBy(o => Connection<City>.Distance((City)o.LeftData.Tag, (City)o.RightData.Tag));
+					var rightCity = (City)voronoiEdge.RightData.Tag;
+					var leftCity = (City)voronoiEdge.LeftData.Tag;
+					source.Outbound[source1] = leftCity.Country != source ? rightCity : leftCity;
+					source1.Outbound[source] = rightCity.Country != source1 ? leftCity : rightCity;
+				}
+			}
 
-			//foreach (var c in missing)
-			//{
-			//	Console.WriteLine($"Missing '{c}'");
-			//}
-
-			//foreach (var c in cs.Where(o => o.BorderCountries.Count == 0 && !o.Ocean))
-			//{
-			//	Console.WriteLine($"Impossible nation '{c.Name}' has no borders and no ports!");
-			//}
-			//Console.WriteLine();
-			//Console.WriteLine(
-			//	$"Loaded {cs.Count:N0} nations with {cs.Sum(o => o.Cities.Count):N0} cities and {cs.SelectMany(o => o.Highways).Distinct().Count():N0} highways.");
 			return cs;
 		}
 

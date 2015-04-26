@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -43,23 +44,35 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algorithm\AStar.cs" />
+    <Compile Include="Algorithm\Path.cs" />
+    <Compile Include="Collections\PriorityQueue.cs" />
     <Compile Include="DNA\BasePair.cs" />
     <Compile Include="DNA\Enums\DnaValue.cs" />
     <Compile Include="DNA\Sequences\FixedStringSequence.cs" />
     <Compile Include="DNA\Sequences\SequenceBase.cs" />
     <Compile Include="DNA\Sequences\StringSequence.cs" />
-    <Compile Include="Geography\AStar.cs" />
     <Compile Include="Geography\City.cs" />
-    <Compile Include="Geography\DijkstraHelper.cs" />
     <Compile Include="Geography\ExtensionMethods.cs" />
     <Compile Include="Geography\Connection.cs" />
     <Compile Include="Geography\Country.cs" />
-    <Compile Include="Geography\ICoordinate.cs" />
     <Compile Include="Geography\Point.cs" />
+    <Compile Include="Interface\ICoordinate.cs" />
+    <Compile Include="Interface\IHasNeighbors.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FortuneVoronoi\FortuneVoronoi.csproj">
+      <Project>{DDF5D740-6EE1-44BA-9DB9-782BF23E28D6}</Project>
+      <Name>FortuneVoronoi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\miconvexhull_fa9850525460\MIConvexHull\MIConvexHull.csproj">
+      <Project>{2337776d-7d0c-40aa-a439-c26c3ce24fab}</Project>
+      <Name>MIConvexHull</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

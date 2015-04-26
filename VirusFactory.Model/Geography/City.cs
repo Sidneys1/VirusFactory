@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using MIConvexHull;
+using VirusFactory.Model.Interface;
 
 namespace VirusFactory.Model.Geography
 {
-	public class City : ICoordinate, IHasNeighbors<City>
+	public class City : ICoordinate, IHasNeighbors<City>, IVertex
 	{
 		public Point Point { get; }
 
@@ -17,6 +19,8 @@ namespace VirusFactory.Model.Geography
 		public double Latitude => Point.Y;
 
 		public double Longitude => Point.X;
+
+		public bool IsHull { get; set; } = false;
 
 		public Country Country { get; }
 
@@ -41,5 +45,6 @@ namespace VirusFactory.Model.Geography
 		public IEnumerable<City> Neighbors => BorderCities;
 
 		public override string ToString() => Name;
+		public double[] Position => new[] {Point.X, Point.Y};
 	}
 }

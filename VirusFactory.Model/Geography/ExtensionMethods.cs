@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using VirusFactory.Model.Interface;
 
 namespace VirusFactory.Model.Geography
 {

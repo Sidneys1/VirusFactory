@@ -16,7 +16,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -41,6 +41,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -56,6 +57,18 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FortuneVoronoi\FortuneVoronoi.csproj">
+      <Project>{ddf5d740-6ee1-44ba-9db9-782bf23e28d6}</Project>
+      <Name>FortuneVoronoi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\miconvexhull_fa9850525460\MIConvexHull\MIConvexHull.csproj">
+      <Project>{2337776D-7D0C-40AA-A439-C26C3CE24FAB}</Project>
+      <Name>MIConvexHull</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\QuickFont\QuickFont.csproj">
+      <Project>{bbece6fc-ef63-40f8-a734-a500d1dfc1af}</Project>
+      <Name>QuickFont</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VirusFactory.Model\VirusFactory.Model.csproj">
       <Project>{33141081-7f2c-4995-af60-57e4a86d46be}</Project>
       <Name>VirusFactory.Model</Name>

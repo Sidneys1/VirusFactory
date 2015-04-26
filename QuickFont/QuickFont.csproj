@@ -1,43 +1,48 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C308EF88-86B8-4CE5-A8CE-8C0761AA0CD0}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BBECE6FC-EF63-40F8-A734-A500D1DFC1AF}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VirusFactory.Console</RootNamespace>
-    <AssemblyName>VirusFactory.Console</AssemblyName>
+    <RootNamespace>QuickFont</RootNamespace>
+    <AssemblyName>QuickFont</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MoreLinq">
-      <HintPath>..\packages\morelinq.2.0.0-alpha01\lib\net35\MoreLinq.dll</HintPath>
+    <Reference Include="OpenTK, Version=1.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files\OpenTK\1.1\Binaries\OpenTK\Release\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,21 +50,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Configuration\QFontConfiguration.cs" />
+    <Compile Include="Configuration\QFontKerningConfiguration.cs" />
+    <Compile Include="Configuration\QFontLoaderConfiguration.cs" />
+    <Compile Include="FontLoadDescription.cs" />
+    <Compile Include="Helper.cs" />
+    <Compile Include="KerningCalculator.cs" />
+    <Compile Include="ProjectionStack.cs" />
+    <Compile Include="QBitmap.cs" />
+    <Compile Include="QFont.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Builder.cs" />
+    <Compile Include="Configuration\QFontBuilderConfiguration.cs" />
+    <Compile Include="QFontData.cs" />
+    <Compile Include="Configuration\QFontShadowConfiguration.cs" />
+    <Compile Include="QFontGlyph.cs" />
+    <Compile Include="QFontRenderOptions.cs" />
+    <Compile Include="TextNodeList.cs" />
+    <Compile Include="TexturePage.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\miconvexhull_fa9850525460\MIConvexHull\MIConvexHull.csproj">
-      <Project>{2337776d-7d0c-40aa-a439-c26c3ce24fab}</Project>
-      <Name>MIConvexHull</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\VirusFactory.Model\VirusFactory.Model.csproj">
-      <Project>{33141081-7f2c-4995-af60-57e4a86d46be}</Project>
-      <Name>VirusFactory.Model</Name>
-    </ProjectReference>
+    <Content Include="ChangeLog.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
