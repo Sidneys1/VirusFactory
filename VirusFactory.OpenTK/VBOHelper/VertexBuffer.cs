@@ -1,17 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using OpenTK;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
 namespace VirusFactory.OpenTK.VBOHelper {
 	public class VertexBuffer {
-		private int _id;
+		private readonly int[] _vboId = new int[2];
 
 		public VertexBuffer() {
 			// Original Constructor code. Removed because it doesn't account for multi-element buffers?
@@ -26,26 +20,46 @@ namespace VirusFactory.OpenTK.VBOHelper {
 		public void SetData(Vector2[] data) {
 			if (data == null) return;
 
-			GL.GenBuffers(1, out _id);
-			GL.BindBuffer(BufferTarget.ArrayBuffer, _id);
-			var ptr = new IntPtr(data.Length*Vector2.SizeInBytes);
-			GL.BufferData(BufferTarget.ArrayBuffer, ptr, data, BufferUsageHint.StaticDraw);
+			GL.GenBuffers(2, _vboId);
+			GL.BindBuffer(BufferTarget.ArrayBuffer, _vboId[0]);
+			GL.BindBuffer(BufferTarget.ElementArrayBuffer, _vboId[1]);
+
+			GL.BindBuffer(BufferTarget.ElementArrayBuffer, _vboId[1]);
+			var v = Enumerable.Range(0, data.Length).ToArray();
+			GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(data.Length * sizeof(ushort)), v, BufferUsageHint.StaticDraw);
+
+			GL.BindBuffer(BufferTarget.ArrayBuffer, _vboId[0]);
+			GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(data.Length * 8*sizeof(float)), data, BufferUsageHint.StaticDraw);
+			
+			//var ptr = new IntPtr(data.Length*Vector2.SizeInBytes);
+			//GL.BufferData(BufferTarget.ArrayBuffer, ptr, data, BufferUsageHint.StaticDraw);
+
+			//GL.EnableClientState(ArrayCap.VertexArray);
+			GL.VertexPointer(2, VertexPointerType.Float, 8* sizeof(float), IntPtr.Zero);
 
 			Length = data.Length;
 
-			GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+			GL.BindVertexArray(0);
 		}
 
 		public void Render() {
 			
-			GL.PushClientAttrib(ClientAttribMask.ClientVertexArrayBit);
-			//GL.BindBuffer(BufferTarget.ArrayBuffer, _id);
-			//GL.VertexPointer(2, VertexPointerType.Float, 0, new IntPtr(0));
-			GL.EnableVertexAttribArray(_id);
-			GL.VertexAttribIPointer(0, 2, VertexAttribIntegerType.Int, Vector2.SizeInBytes, IntPtr.Zero);
-			//GL.EnableClientState(ArrayCap.VertexArray);
+			//GL.PushClientAttrib(ClientAttribMask.ClientVertexArrayBit);
+			////GL.BindBuffer(BufferTarget.ArrayBuffer, _vboId);
+			////GL.VertexPointer(2, VertexPointerType.Float, 0, new IntPtr(0));
+			//GL.EnableVertexAttribArray(_vboId);
+			//GL.VertexAttribIPointer(0, 2, VertexAttribIntegerType.Int, Vector2.SizeInBytes, IntPtr.Zero);
+			////GL.EnableClientState(ArrayCap.VertexArray);
+			////GL.DrawArrays(PrimitiveType.Points, 0, Length);
+			//GL.PopClientAttrib();
+			
+			GL.BindVertexArray(_vboId[0]);
+			//GL.VertexPointer(2, VertexPointerType.Int, 8*sizeof(float), IntPtr.Zero);
+			GL.DrawElements(PrimitiveType.Points, Length, DrawElementsType.UnsignedInt, Enumerable.Range(0,Length).ToArray());
 			//GL.DrawArrays(PrimitiveType.Points, 0, Length);
-			GL.PopClientAttrib();
+			//GL.DrawRangeElements(PrimitiveType.Points, 0, Length, Length, DrawElementsType.UnsignedShort, IntPtr.Zero);
+			//GL.BindVertexArray(0);
 		}
 	}
 }
+

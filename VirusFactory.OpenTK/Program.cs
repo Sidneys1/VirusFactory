@@ -6,9 +6,8 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
-using VirusFactory.Model.Algorithm;
-using VirusFactory.Model.Geography;
 using QuickFont;
+using VirusFactory.Model.Geography;
 using VirusFactory.OpenTK.VBOHelper;
 
 // ReSharper disable PossibleUnintendedReferenceComparison
@@ -58,6 +57,14 @@ namespace VirusFactory.OpenTK {
 				o.X = d;
 				o.Y = (o.Y/scaleHeight) + addHeight;
 			});
+
+			for (var i = 0; i < _points.Length; i++) {
+				var o = _points[i];
+				var d = (o.X / scaleWidth) + addWidth;
+				if (d < -1)
+					d = 2 + d;
+				_points[i] = new Vector2(d, (o.Y / scaleHeight) + addHeight);
+			}
 
 			//_highways = _countries.SelectMany(o => o.Cities.SelectMany(p => p.BorderCities.Select(q => new Connection<City>(p, q)))).Distinct().ToArray();
 
@@ -114,7 +121,7 @@ namespace VirusFactory.OpenTK {
 					//	GL.Vertex2(d1, (_highways[i].LocationB.Latitude / scaleHeight) + addHeight);
 					//}
 					//GL.End();
-					GL.Color3(1f,1f,1f);
+					//GL.Color3(1f,1f,1f);
 					_buffer.Render();
 					//GL.Begin(PrimitiveType.Points);
 					//for (var i = 0; i < _points.Length; i++) {
