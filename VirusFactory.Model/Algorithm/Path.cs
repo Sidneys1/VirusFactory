@@ -7,6 +7,9 @@ namespace VirusFactory.Model.Algorithm
 {
 	public class Path<T> : IEnumerable<T>, IFormattable where T : ICoordinate {
 		public T LastStep { get; }
+
+		public T FirstStep => PreviousSteps != null ? PreviousSteps.FirstStep : LastStep;
+
 		public Path<T> PreviousSteps { get; }
 		public double TotalCost { get; }
 
