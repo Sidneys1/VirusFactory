@@ -57,6 +57,7 @@
     <Compile Include="Geography\Connection.cs" />
     <Compile Include="Geography\Country.cs" />
     <Compile Include="Geography\Point.cs" />
+    <Compile Include="Geography\World.cs" />
     <Compile Include="Interface\ICoordinate.cs" />
     <Compile Include="Interface\IHasNeighbors.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

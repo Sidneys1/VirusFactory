@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using VirusFactory.Model.Interface;
 
 namespace VirusFactory.Model.Algorithm
@@ -10,7 +11,9 @@ namespace VirusFactory.Model.Algorithm
 
 		public T FirstStep => PreviousSteps != null ? PreviousSteps.FirstStep : LastStep;
 
-		public Path<T> PreviousSteps { get; }
+		public Path<T> FirstPath => PreviousSteps != null ? PreviousSteps.FirstPath : this;  
+
+		public Path<T> PreviousSteps { get; set; }
 		public double TotalCost { get; }
 
 		private Path(T lastStep, Path<T> previousSteps, double totalCost) {
@@ -40,11 +43,9 @@ namespace VirusFactory.Model.Algorithm
 				: LastStep.ToString();
 		}
 
-		public string ToString(string format, IFormatProvider formatProvider)
-		{
-			if (PreviousSteps == null) return LastStep.ToString();
-			var diff = (TotalCost - PreviousSteps.TotalCost).ToString(format, formatProvider);
-			return $"{PreviousSteps.ToString(format, formatProvider)} {diff}→ {LastStep}";
+		public string ToString(string format, IFormatProvider formatProvider) {
+			return PreviousSteps == null ? LastStep.ToString() : $"{PreviousSteps.ToString(format, formatProvider)} -> {LastStep}";
+			//var diff = (TotalCost - PreviousSteps.TotalCost).ToString(format, formatProvider);
 		}
 	}
 }

@@ -5,7 +5,7 @@ using VirusFactory.Model.Interface;
 
 namespace VirusFactory.Model.Algorithm {
 	public static class AStar {
-		public static Path<T> FindPath<T>(T start, T destination, Func<T, T, double> distance, Func<T, double> estimate) where T : IHasNeighbors<T>, ICoordinate {
+		public static Path<T> FindPath<T>(T start, T destination, Func<T, T, double> distance, Func<T, T, double> estimate) where T : IHasNeighbors<T>, ICoordinate {
 			var closed = new HashSet<T>();
 			var queue = new PriorityQueue<double, Path<T>>();
 			queue.Enqueue(0, new Path<T>(start));
@@ -19,7 +19,7 @@ namespace VirusFactory.Model.Algorithm {
 				foreach (var n in path.LastStep.Neighbors) {
 					var d = distance(path.LastStep, n);
 					var newPath = path.AddStep(n, d);
-					queue.Enqueue(newPath.TotalCost + estimate(n), newPath);
+					queue.Enqueue(newPath.TotalCost + estimate(n, destination), newPath);
 				}
 			}
 

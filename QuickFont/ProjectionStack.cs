@@ -147,7 +147,9 @@ namespace QuickFont
 
             GL.MatrixMode(MatrixMode.Modelview);
 
-            Begun = false;
+			GL.Disable(EnableCap.Texture2D);
+			GL.Disable(EnableCap.Blend);
+			Begun = false;
         }
 
 

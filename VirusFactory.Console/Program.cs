@@ -10,7 +10,9 @@ using static System.Console;
 namespace VirusFactory.Console {
 	class Program {
 		static void Main() {
-			var cs = Country.LoadCountries("countries.dat", "cities");
+			var world =new World("countries.dat", "cities");
+
+			var cs = world.Countries;
 
 			Stats(cs);
 
@@ -82,7 +84,7 @@ namespace VirusFactory.Console {
 			} while (running);
 		}
 
-		private static void Stats(List<Country> cs) {
+		private static void Stats(IEnumerable<Country> cs) {
 			WriteLine($"Island Nations:{Environment.NewLine}\t{cs.Count(o => o.BorderCountries.Count == 0)}");
 			WriteLine($"Landlocked Nations:{Environment.NewLine}\t{cs.Count(o => !o.Ocean)}");
 			WriteLine(

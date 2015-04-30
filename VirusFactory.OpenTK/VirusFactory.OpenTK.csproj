@@ -16,7 +16,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -50,10 +50,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GameHelpers\RectangleD.cs" />
+    <Compile Include="GameHelpers\TickItem.cs" />
+    <Compile Include="GameHelpers\TickScheduler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VBOHelper\BufferElement.cs" />
-    <Compile Include="VBOHelper\VertexBuffer.cs" />
+    <Compile Include="GameHelpers\VBOHelper\BufferElement.cs" />
+    <Compile Include="GameHelpers\VBOHelper\VertexBuffer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
