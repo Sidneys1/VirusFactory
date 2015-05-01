@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using MoreLinq;
@@ -38,18 +39,43 @@ namespace VirusFactory.OpenTK {
 		private static WindowState _previousState;
 
 		static void Main() {
-			World = new World("countries.dat", "cities");
+            var stop = new Stopwatch();
+
+            stop.Start();
+		    {
+		        World = World.Load("world.dat");
+		    }
+            stop.Stop();
+		    Console.WriteLine($"{stop.ElapsedMilliseconds:0000}ms: Loading world.dat");
+
 			_countries = World.Countries.Where(o => o.Cities.Count >= 2).ToList();
 			_cities = _countries.SelectMany(o => o.Cities).ToArray();
-			_points = _cities.Select(GenBufferElement).ToArray();
 
-			Scaling(out _scale, out _add, out _bounds);
+            stop.Restart();
+		    {
+		        _points = _cities.Select(GenBufferElement).ToArray();
+		    }
+            stop.Stop();
+            Console.WriteLine($"{stop.ElapsedMilliseconds:0000}ms: Generating buffer elements");
 
-			TransformPoints(_scale, _add);
+            Scaling(out _scale, out _add, out _bounds);
 
-			_highways = GenHighways(_scale, _add);
+            stop.Restart();
+		    {
+		        TransformPoints(_scale, _add);
+		    }
+            stop.Stop();
+            Console.WriteLine($"{stop.ElapsedMilliseconds:0000}ms: Transforming points");
 
-			using (var game = new GameWindow(1280, 720, new GraphicsMode(32, 24, 0, 8))) {
+            stop.Restart();
+		    {
+		        _highways = GenHighways(_scale, _add);
+		    }
+            stop.Stop();
+            Console.WriteLine($"{stop.ElapsedMilliseconds:0000}ms: Gnerating Highways");
+            //stop.Restart();
+
+            using (var game = new GameWindow(1280, 720, new GraphicsMode(32, 24, 0, 8))) {
 				game.Load += GameLoad;
 				game.Closing += (sender, args) => { _citiesBuffer.Dispose(); _highwayBuffer.Dispose(); _pathBuffer.Dispose(); };
 				game.UpdateFrame += GameUpdateFrame;
@@ -57,7 +83,6 @@ namespace VirusFactory.OpenTK {
 				game.Resize += (sender, e) => {
 					GL.Viewport(0, 0, game.Width, game.Height);
 					QFont.InvalidateViewport();
-
 					SetViewport(game);
 				};
 				game.KeyDown += (o, eventArgs) => {
@@ -139,13 +164,13 @@ namespace VirusFactory.OpenTK {
 		private static void UpdatePath(GameWindow sender, FrameEventArgs e) {
 			_selectedCountry = _countries.RandomSubset(2).ToArray();
 
-			var connected =
-				_selectedCountry[0].BorderCountries.Any(o => o == _selectedCountry[1] || o.BorderCountries.Contains(_selectedCountry[1]));
 			var pathingCities = new[] {
 				_selectedCountry?[0].Cities.RandomSubset(1).First(),
 				_selectedCountry?[1].Cities.RandomSubset(1).First()
 			};
 
+			var connected =
+				_selectedCountry[0].BorderCountries.Any(o => o == _selectedCountry[1] || o.BorderCountries.Contains(_selectedCountry[1]));
 			if (connected) {
 				var middleC = _selectedCountry[0].BorderCountries.Contains(_selectedCountry[1])
 					? null
@@ -218,8 +243,8 @@ namespace VirusFactory.OpenTK {
 			var videoMemoryIntPtr = GL.MapBuffer(BufferTarget.ArrayBuffer, BufferAccess.ReadWrite);
 			var videoMemory = (BufferElement*)videoMemoryIntPtr.ToPointer();
 			for (var i = 0; i < _points.Length; i++) {
-				var sin = (float)(Math.Sin((_elapsed / (Math.PI / 5)) + (videoMemory[i].Vertex.X * Math.PI)) / 2) + 0.5f;
-				videoMemory[i].Color = new Vector4(videoMemory[i].Color.Xyz, sin*videoMemory[i].OriginalW);
+			    var sin = (float) (Math.Sin((_elapsed/(Math.PI/5)) + (videoMemory[i].Vertex.X*Math.PI))/2) +0.5f;
+				videoMemory[i].Color = new Vector4(videoMemory[i].Color.X, videoMemory[i].Color.Y, videoMemory[i].Color.Z, sin *videoMemory[i].OriginalW);
 			}
 			GL.UnmapBuffer(BufferTarget.ArrayBuffer);
 		}

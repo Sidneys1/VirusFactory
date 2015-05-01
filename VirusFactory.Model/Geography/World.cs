@@ -5,9 +5,12 @@ using System.Linq;
 using FortuneVoronoi;
 using MIConvexHull.ConvexHull;
 using MoreLinq;
+using ProtoBuf;
 
 namespace VirusFactory.Model.Geography {
+    [ProtoContract(SkipConstructor = true)]
 	public class World {
+        [ProtoMember(1, AsReference = false)]
 		readonly List<Country> _countries = new List<Country>();
 		public IReadOnlyList<Country> Countries => _countries; 
 
@@ -96,5 +99,17 @@ namespace VirusFactory.Model.Geography {
 				}
 			}
 		}
+
+        public static void Save(World w, string path) {
+            using (var file = File.Create(path)) {
+                Serializer.Serialize(file, w);
+            }
+        }
+
+        public static World Load(string path) {
+            using (var file = File.OpenRead(path)) {
+                return Serializer.Deserialize<World>(file);
+            }
+        }
 	}
 }

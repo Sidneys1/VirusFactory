@@ -1,18 +1,21 @@
 // ReSharper disable CompareOfFloatsByEqualityOperator
 
+using ProtoBuf;
+
 namespace VirusFactory.Model.Geography
 {
-	//[StructLayout(LayoutKind.Explicit)]
+	[ProtoContract]
 	public struct Point
 	{
 		public Point(double x, double y) {
 			Y = y;
 			X = x;
 		}
-		//[FieldOffset(0)]
+		[ProtoMember(1)]
 		public readonly double X;
-		//[FieldOffset(sizeof(double))]
-		public readonly double Y;
+        //[FieldOffset(sizeof(double))]
+        [ProtoMember(2)]
+        public readonly double Y;
 		//[FieldOffset(0)]
 		//public fixed double Position[2];
 		
