@@ -53,8 +53,10 @@
     <Compile Include="FSM\Elements\TextElement.cs" />
     <Compile Include="FSM\Elements\FloatTextElement.cs" />
     <Compile Include="FSM\Elements\UiElement.cs" />
+    <Compile Include="FSM\Elements\VboElement.cs" />
     <Compile Include="FSM\GameFiniteStateMachine.cs" />
     <Compile Include="FSM\Interface\IInputtable.cs" />
+    <Compile Include="FSM\Interface\IResizable.cs" />
     <Compile Include="FSM\States\IngameState.cs" />
     <Compile Include="FSM\States\MainMenuState.cs" />
     <Compile Include="FSM\States\PauseMenuState.cs" />

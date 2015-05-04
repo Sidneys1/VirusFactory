@@ -3,6 +3,7 @@ using System.Linq;
 using MoreLinq;
 using OpenTK;
 using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using QuickFont;
 using VirusFactory.OpenTK.FSM.Elements;
@@ -60,7 +61,18 @@ namespace VirusFactory.OpenTK.FSM.States {
             GameElements.Add(_exitButton);
         }
 
+        public override void RenderFrame(FrameEventArgs e) {
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
+            GL.PopAttrib();
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
 
+            GL.Ortho(-1, 1, -1, 1, 0.0, 4.0);
+
+            base.RenderFrame(e);
+
+            Owner.SwapBuffers();
+        }
 
         #region IInputtable
 

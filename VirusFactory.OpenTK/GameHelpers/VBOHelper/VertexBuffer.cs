@@ -58,9 +58,9 @@ namespace VirusFactory.OpenTK.GameHelpers.VBOHelper {
         public void Dispose() {
             if (IsDisposed) return;
             try {
-                GL.DeleteBuffer(_id);
-            } catch (Exception e) {
-                Console.WriteLine(e);
+                    //GL.DeleteBuffer(_id);
+            } catch {
+                Console.WriteLine("ERROR");
             }
             IsDisposed = true;
         }

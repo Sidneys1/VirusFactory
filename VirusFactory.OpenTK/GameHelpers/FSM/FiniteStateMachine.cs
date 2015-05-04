@@ -18,11 +18,7 @@ namespace VirusFactory.OpenTK.GameHelpers.FSM {
 
             CurrState.TransitionFrom(transition);
             to.TransitionTo(transition);
-            if (transition.Command == Command.Deactivate)
-                States.Remove(CurrState);
             CurrState = to;
-
-            
         }
     }
 }

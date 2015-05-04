@@ -51,7 +51,7 @@ namespace VirusFactory.OpenTK {
             using (var game = new GameWindow(1280, 720, new GraphicsMode(32, 24, 0, 8))) {
                 var mainMenuState = new MainMenuState(game, fsm);
                 fsm.States.Add(mainMenuState);
-
+                fsm.States.Add(new IngameState(game, fsm));
                 fsm.Transition(mainMenuState);
 
                 game.Load += (sender, args) => fsm.Load();
@@ -60,17 +60,8 @@ namespace VirusFactory.OpenTK {
                 game.UpdateFrame += (sender, args) => fsm.UpdateFrame(args);
                 game.MouseDown += (sender, args) => fsm.MouseDown(args);
                 game.MouseUp += (sender, args) => fsm.MouseUp(args);
-                game.RenderFrame += (sender, args) => {
-                    GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
-                    GL.PopAttrib();
-                    GL.MatrixMode(MatrixMode.Projection);
-                    GL.LoadIdentity();
-
-                    GL.Ortho(-1, 1, -1, 1, 0.0, 4.0);
-                    fsm.RenderFrame(args);
-
-                    game.SwapBuffers();
-                };
+                game.Resize += (sender, args) => fsm.Resize();
+                game.RenderFrame += (sender, args) => fsm.RenderFrame(args);
                 game.Unload += (sender, args) => fsm.UnLoad();
 
                 game.Run(30,60);
@@ -148,11 +139,6 @@ namespace VirusFactory.OpenTK {
                 game.Run(30, 60);
             }
         }
-
-        private static void Game_RenderFrame(object sender, FrameEventArgs e) {
-            throw new NotImplementedException();
-        }
-
         private static void SetViewport(GameWindow game) {
             var fatness1 = game.Width/(float) game.Height;
             var fatness2 = _bounds.Width/_bounds.Height;
