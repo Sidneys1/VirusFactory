@@ -11,12 +11,11 @@ using VirusFactory.OpenTK.FSM.Behaviours;
 using VirusFactory.OpenTK.FSM.Elements;
 using VirusFactory.OpenTK.FSM.Interface;
 using VirusFactory.OpenTK.GameHelpers;
+using VirusFactory.OpenTK.GameHelpers.Behaviourals;
 using VirusFactory.OpenTK.GameHelpers.FSM;
 
 namespace VirusFactory.OpenTK.FSM.States {
     public class MainMenuState : GameStateBase, IInputtable, IUpdateable {
-        private readonly TextElement _startButton, _exitButton;
-
         public override Transition[] ToThisTransitions { get; }
         = {
             new Transition(Command.Deactivate, typeof(MainMenuState), typeof(PauseMenuState)),
@@ -29,32 +28,31 @@ namespace VirusFactory.OpenTK.FSM.States {
         };
         
         public MainMenuState(GameWindow owner, GameFiniteStateMachine parent) : base(owner, parent) {
-            var uiElementBehavior = new UiElementBehavior(o => {
+            var uiElementBehavior = new BehaviourBase<GameTriggers, UiElement>(o => {
                 var floatPos = EaseMouse(o.MousePosition);
                 o.PositionAdd = floatPos / ((float)o.AttachedProperties["floatiness"] * 2f);
             });
 
-            _startButton = new TextElement(owner, "start", ".\\fonts\\toxica.ttf", 40f) {
+            var startButton = new TextElement(owner, "start", ".\\fonts\\toxica.ttf", 40f) {
                 NormalColor = Color4.Gray,
                 Position = new Vector2(0f, -0.4f),
                 Behaviours = { { GameTriggers.MouseMove, uiElementBehavior} },
                 AttachedProperties = { { "floatiness", 50f } },
                 MouseOverColor = Color4.White
             };
-            _startButton.Clicked += args =>
+            startButton.Clicked += args =>
             {
                 StateMachine.Transition(parent.States.OfType<IngameState>().FirstOrDefault() ?? new IngameState(Owner, StateMachine));
             };
 
-            _exitButton = new TextElement(owner, "exit", ".\\fonts\\toxica.ttf", 40f) {
+            var exitButton = new TextElement(owner, "exit", ".\\fonts\\toxica.ttf", 40f) {
                 NormalColor = Color4.Gray,
                 Position = new Vector2(0f, -0.15f),
                 Behaviours = { { GameTriggers.MouseMove, uiElementBehavior } },
                 AttachedProperties = { { "floatiness", 50f } },
                 MouseOverColor = Color4.White,
             };
-
-            _exitButton.Clicked += args => owner.Exit();
+            exitButton.Clicked += args => owner.Exit();
 
             GameElements.Add(new TextElement(owner, "Apoplexy", ".\\fonts\\toxica.ttf", 72f) {
                 NormalColor = Color4.DarkRed,
@@ -68,8 +66,8 @@ namespace VirusFactory.OpenTK.FSM.States {
                 Alignment = QFontAlignment.Left
             });
 
-            GameElements.Add(_startButton);
-            GameElements.Add(_exitButton);
+            GameElements.Add(startButton);
+            GameElements.Add(exitButton);
         }
 
         public override void RenderFrame(FrameEventArgs e) {

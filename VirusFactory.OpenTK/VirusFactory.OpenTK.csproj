@@ -50,12 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FSM\Behaviours\GameBehavior.cs" />
     <Compile Include="FSM\Behaviours\GameTriggers.cs" />
-    <Compile Include="FSM\Behaviours\IBehavioredUiElement.cs" />
-    <Compile Include="FSM\Behaviours\IGameBehaviored.cs" />
-    <Compile Include="FSM\Elements\IUiElement.cs" />
-    <Compile Include="FSM\Behaviours\UiElementBehavior.cs" />
     <Compile Include="FSM\Elements\TextElement.cs" />
     <Compile Include="FSM\Elements\UiElement.cs" />
     <Compile Include="FSM\Elements\VboElement.cs" />
