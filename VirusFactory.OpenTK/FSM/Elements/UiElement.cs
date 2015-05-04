@@ -4,10 +4,9 @@ using OpenTK.Input;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using Behaviorals;
 using VirusFactory.OpenTK.FSM.Behaviours;
 using VirusFactory.OpenTK.FSM.Interface;
-using VirusFactory.OpenTK.GameHelpers;
-using VirusFactory.OpenTK.GameHelpers.Behaviourals;
 
 namespace VirusFactory.OpenTK.FSM.Elements {
 
@@ -35,7 +34,7 @@ namespace VirusFactory.OpenTK.FSM.Elements {
 
         public MultiMap<GameTriggers, Behaviour<GameTriggers, UiElement>> Behaviours { get; } = new MultiMap<GameTriggers, Behaviour<GameTriggers, UiElement>>();
 
-        public Dictionary<object, object> AttachedProperties { get; } = new Dictionary<object, object>();
+        public Dictionary<string, object> AttachedProperties { get; } = new Dictionary<string, object>();
 
         public abstract Color4? MouseOverColor { get; set; }
 

@@ -2,8 +2,8 @@
 using OpenTK;
 using System.Collections.Generic;
 using System.Linq;
+using GFSM;
 using VirusFactory.OpenTK.FSM.Interface;
-using VirusFactory.OpenTK.GameHelpers.FSM;
 
 namespace VirusFactory.OpenTK.FSM {
 

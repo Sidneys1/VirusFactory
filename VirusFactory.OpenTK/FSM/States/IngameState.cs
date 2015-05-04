@@ -5,11 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using GFSM;
 using VirusFactory.Model.Geography;
 using VirusFactory.OpenTK.FSM.Elements;
 using VirusFactory.OpenTK.FSM.Interface;
 using VirusFactory.OpenTK.GameHelpers;
-using VirusFactory.OpenTK.GameHelpers.FSM;
 using VirusFactory.OpenTK.GameHelpers.VBOHelper;
 
 namespace VirusFactory.OpenTK.FSM.States {

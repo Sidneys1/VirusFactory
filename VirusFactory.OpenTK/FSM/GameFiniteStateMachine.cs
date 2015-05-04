@@ -1,7 +1,7 @@
-﻿using OpenTK;
+﻿using GFSM;
+using OpenTK;
 using OpenTK.Input;
 using VirusFactory.OpenTK.FSM.Interface;
-using VirusFactory.OpenTK.GameHelpers.FSM;
 
 namespace VirusFactory.OpenTK.FSM {
 
@@ -62,11 +62,11 @@ namespace VirusFactory.OpenTK.FSM {
         public void MouseWheel(MouseWheelEventArgs e) {
             (CurrState as IInputtable)?.MouseWheel(e);
         }
-
-        #endregion Methods
-
+        
         public void Resize() {
             (CurrState as IResizable)?.Resize();
         }
+        
+        #endregion Methods
     }
 }

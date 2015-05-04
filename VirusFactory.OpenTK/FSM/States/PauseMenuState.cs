@@ -1,6 +1,6 @@
 ﻿using OpenTK;
 using System;
-using VirusFactory.OpenTK.GameHelpers.FSM;
+using GFSM;
 
 namespace VirusFactory.OpenTK.FSM.States {
 

@@ -5,12 +5,12 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using QuickFont;
 using System.Linq;
+using Behaviorals;
+using GFSM;
 using VirusFactory.OpenTK.FSM.Behaviours;
 using VirusFactory.OpenTK.FSM.Elements;
 using VirusFactory.OpenTK.FSM.Interface;
 using VirusFactory.OpenTK.GameHelpers;
-using VirusFactory.OpenTK.GameHelpers.Behaviourals;
-using VirusFactory.OpenTK.GameHelpers.FSM;
 
 namespace VirusFactory.OpenTK.FSM.States {
 
