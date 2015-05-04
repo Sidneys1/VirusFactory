@@ -2,6 +2,7 @@
 using VirusFactory.OpenTK.FSM.Interface;
 
 namespace VirusFactory.OpenTK.FSM {
+
     public abstract class GameElementBase : ILoadable {
         protected GameWindow Owner;
 
@@ -9,7 +10,10 @@ namespace VirusFactory.OpenTK.FSM {
             Owner = owner;
         }
 
-        public virtual void Load() { }
-        public virtual void UnLoad() { }
+        public virtual void Load() {
+        }
+
+        public virtual void UnLoad() {
+        }
     }
 }

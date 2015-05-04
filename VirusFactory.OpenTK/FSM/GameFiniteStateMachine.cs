@@ -4,7 +4,8 @@ using VirusFactory.OpenTK.FSM.Interface;
 using VirusFactory.OpenTK.GameHelpers.FSM;
 
 namespace VirusFactory.OpenTK.FSM {
-    public class GameFiniteStateMachine : FiniteStateMachine<GameStateBase>, IUpdateable, IRenderable, IInputtable, IResizable{
+
+    public class GameFiniteStateMachine : FiniteStateMachine<GameStateBase>, IUpdateable, IRenderable, IInputtable, IResizable {
 
         #region Methods
 

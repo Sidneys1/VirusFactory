@@ -177,26 +177,26 @@ namespace QuickFont {
                     for (int j = rect.Y; j < rect.Y + rect.Height; j++)
                         if (!emptyPix(bitmapData, startX, j))
                             goto Done1;
-                        Done1:
+                Done1:
 
                 for (endX = rect.X + rect.Width; endX >= 0; endX--)
                     for (int j = rect.Y; j < rect.Y + rect.Height; j++)
                         if (!emptyPix(bitmapData, endX, j))
                             goto Done2;
-                        Done2:
+                Done2:
 
                 for (startY = rect.Y; startY < bitmapData.Height; startY++)
                     for (int i = startX; i < endX; i++)
                         if (!emptyPix(bitmapData, i, startY))
                             goto Done3;
 
-                        Done3:
+                Done3:
 
                 for (endY = rect.Y + rect.Height; endY >= 0; endY--)
                     for (int i = startX; i < endX; i++)
                         if (!emptyPix(bitmapData, i, endY))
                             goto Done4;
-                        Done4:;
+                Done4:;
             }
 
             if (endY < startY)

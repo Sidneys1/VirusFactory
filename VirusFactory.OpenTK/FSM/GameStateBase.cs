@@ -1,12 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using MoreLinq;
+﻿using MoreLinq;
 using OpenTK;
+using System.Collections.Generic;
+using System.Linq;
 using VirusFactory.OpenTK.FSM.Interface;
 using VirusFactory.OpenTK.GameHelpers.FSM;
 
 namespace VirusFactory.OpenTK.FSM {
+
     public abstract class GameStateBase : State, IRenderable {
+
         #region Fields
 
         protected GameWindow Owner;
@@ -16,6 +18,7 @@ namespace VirusFactory.OpenTK.FSM {
         #region Properties
 
         public List<GameElementBase> GameElements { get; } = new List<GameElementBase>();
+
         public GameFiniteStateMachine StateMachine { get; }
 
         #endregion Properties

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 
 namespace VirusFactory.OpenTK.GameHelpers {
+
     public class MultiMap<TKey, TValue> : Dictionary<TKey, HashSet<TValue>> {
+
         public void Add(TKey key, TValue value) {
             if (key == null) throw new ArgumentNullException($"Parameter {nameof(key)} cannot be null.");
             HashSet<TValue> container;
@@ -36,7 +38,7 @@ namespace VirusFactory.OpenTK.GameHelpers {
 
         public void Merge(MultiMap<TKey, TValue> toMergeWith) {
             if (toMergeWith == null) throw new ArgumentNullException($"Parameter {nameof(toMergeWith)} cannot be null.");
-            
+
             foreach (var pair in toMergeWith) {
                 foreach (var value in pair.Value) {
                     Add(pair.Key, value);
@@ -49,6 +51,6 @@ namespace VirusFactory.OpenTK.GameHelpers {
             if (!TryGetValue(key, out toReturn) && returnEmptySet)
                 toReturn = new HashSet<TValue>();
             return toReturn;
-        } 
+        }
     }
 }

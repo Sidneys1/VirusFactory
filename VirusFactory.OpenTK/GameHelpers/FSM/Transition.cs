@@ -1,6 +1,7 @@
 ﻿using System;
 
 namespace VirusFactory.OpenTK.GameHelpers.FSM {
+
     public class Transition {
         public readonly Command Command;
         public readonly Type To;
@@ -21,7 +22,7 @@ namespace VirusFactory.OpenTK.GameHelpers.FSM {
         public override string ToString() {
             return $"{From.Name} is {Command}d by {To.Name}";
         }
-        
+
         public override int GetHashCode() {
             return Command.GetHashCode() ^ To.GetHashCode() ^ From.GetHashCode();
         }

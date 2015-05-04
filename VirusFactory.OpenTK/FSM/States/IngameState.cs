@@ -1,10 +1,10 @@
-﻿using System;
+﻿using OpenTK;
+using OpenTK.Graphics.OpenGL;
+using QuickFont;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using OpenTK;
-using OpenTK.Graphics.OpenGL;
-using QuickFont;
 using VirusFactory.Model.Geography;
 using VirusFactory.OpenTK.FSM.Elements;
 using VirusFactory.OpenTK.FSM.Interface;
@@ -13,6 +13,7 @@ using VirusFactory.OpenTK.GameHelpers.FSM;
 using VirusFactory.OpenTK.GameHelpers.VBOHelper;
 
 namespace VirusFactory.OpenTK.FSM.States {
+
     public class IngameState : GameStateBase, IUpdateable, IResizable {
 
         #region Fields
@@ -72,7 +73,8 @@ namespace VirusFactory.OpenTK.FSM.States {
 
             _highways = GenHighways(_scale, _add);
 
-            Action prep = () => {
+            Action prep = () =>
+            {
                 GL.EnableClientState(ArrayCap.VertexArray);
                 GL.EnableClientState(ArrayCap.ColorArray);
                 GL.VertexPointer(2, VertexPointerType.Float, BufferElement.SizeInBytes, new IntPtr(0));
@@ -85,9 +87,10 @@ namespace VirusFactory.OpenTK.FSM.States {
             _debugText.Font.Options.Monospacing = QFontMonospacing.Yes;
             SetViewport();
         }
+
         public void UpdateFrame(FrameEventArgs e) {
             _debugText.Text =
-                $"TPS: {Math.Ceiling(Owner.UpdateFrequency):0000} ({Owner.UpdateTime*1000:0.000}ms/tick), FPS: {Math.Ceiling(Owner.RenderFrequency):0000} ({Owner.RenderTime*1000:00.000}ms/frame)";
+                $"TPS: {Math.Ceiling(Owner.UpdateFrequency):0000} ({Owner.UpdateTime * 1000:0.000}ms/tick), FPS: {Math.Ceiling(Owner.RenderFrequency):0000} ({Owner.RenderTime * 1000:00.000}ms/frame)";
         }
 
         public void Resize() {
@@ -149,7 +152,8 @@ namespace VirusFactory.OpenTK.FSM.States {
             add = new Vector2(-0.3f, 0);
             var addt = add;
             var scalet = scale;
-            Func<float, float, float, float> selector = (o, s, a) => {
+            Func<float, float, float, float> selector = (o, s, a) =>
+            {
                 var f = (o / s) + a;
                 if (f < -1)
                     f += 2;
@@ -174,11 +178,13 @@ namespace VirusFactory.OpenTK.FSM.States {
         }
 
         private BufferElement[] GenHighways(float scale, Vector2 add) {
-            return _countries.SelectMany(o => {
+            return _countries.SelectMany(o =>
+            {
                 return
                     o.Cities.SelectMany(p => p.BorderCities.Select(q => new Connection<City>(p, q)))
                         .Distinct()
-                        .SelectMany(x => {
+                        .SelectMany(x =>
+                        {
                             var f = GdpStretch(o);
                             var x3 = (x.LocationA.Point.X / scale) + add.X;
                             var y3 = (x.LocationA.Point.Y / scale) + add.Y;

@@ -64,9 +64,8 @@ namespace VirusFactory.OpenTK {
                 game.RenderFrame += (sender, args) => fsm.RenderFrame(args);
                 game.Unload += (sender, args) => fsm.UnLoad();
 
-                game.Run(30,60);
+                game.Run(30, 60);
             }
-
 
             return;
             var stop = new Stopwatch();
@@ -107,7 +106,8 @@ namespace VirusFactory.OpenTK {
 
             using (var game = new GameWindow(1280, 720, new GraphicsMode(32, 24, 0, 8))) {
                 game.Load += GameLoad;
-                game.Closing += (sender, args) => {
+                game.Closing += (sender, args) =>
+                {
                     _citiesBuffer.Dispose();
                     _highwayBuffer.Dispose();
                     _pathBuffer.Dispose();
@@ -115,12 +115,14 @@ namespace VirusFactory.OpenTK {
                 };
                 game.UpdateFrame += GameUpdateFrame;
                 game.RenderFrame += GameRenderFrame;
-                game.Resize += (sender, e) => {
+                game.Resize += (sender, e) =>
+                {
                     GL.Viewport(0, 0, game.Width, game.Height);
                     QFont.InvalidateViewport();
                     SetViewport(game);
                 };
-                game.KeyDown += (o, eventArgs) => {
+                game.KeyDown += (o, eventArgs) =>
+                {
                     switch (eventArgs.Key) {
                         case Key.Escape:
                             game.Exit();
@@ -139,34 +141,34 @@ namespace VirusFactory.OpenTK {
                 game.Run(30, 60);
             }
         }
+
         private static void SetViewport(GameWindow game) {
-            var fatness1 = game.Width/(float) game.Height;
-            var fatness2 = _bounds.Width/_bounds.Height;
+            var fatness1 = game.Width / (float)game.Height;
+            var fatness2 = _bounds.Width / _bounds.Height;
 
             double l, r, t, b;
 
             if (fatness2 >= fatness1) {
                 l = _bounds.Left;
                 r = _bounds.Right;
-                var halfHeight = (r - l)/fatness1;
+                var halfHeight = (r - l) / fatness1;
                 halfHeight /= 2;
                 t = halfHeight;
                 b = -t;
-            }
-            else {
+            } else {
                 b = _bounds.Top;
                 t = _bounds.Bottom;
-                var halfWidth = (t - b)*fatness1;
+                var halfWidth = (t - b) * fatness1;
                 halfWidth /= 2;
                 r = halfWidth;
                 l = -r;
             }
 
-            _viewPort = new Bounds {Bottom = b, Left = l, Right = r, Top = t};
+            _viewPort = new Bounds { Bottom = b, Left = l, Right = r, Top = t };
         }
 
         private static void GameRenderFrame(object sender, FrameEventArgs e) {
-            var game = (GameWindow) sender;
+            var game = (GameWindow)sender;
             // render graphics
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
             GL.PopAttrib();
@@ -184,15 +186,15 @@ namespace VirusFactory.OpenTK {
             _pathBuffer?.Render(PrimitiveType.Lines);
             QFont.Begin();
             _debugFont.Print(
-                $"TPS: {Math.Ceiling(game.UpdateFrequency):0000} ({game.UpdateTime*1000:0.000}ms/tick), FPS: {Math.Ceiling(game.RenderFrequency):0000} ({game.RenderTime*1000:00.000}ms/frame)");
-            _uiFont.Print($"{_path}", QFontAlignment.Centre, new Vector2(game.Width/2f, game.Height - 20));
+                $"TPS: {Math.Ceiling(game.UpdateFrequency):0000} ({game.UpdateTime * 1000:0.000}ms/tick), FPS: {Math.Ceiling(game.RenderFrequency):0000} ({game.RenderTime * 1000:00.000}ms/frame)");
+            _uiFont.Print($"{_path}", QFontAlignment.Centre, new Vector2(game.Width / 2f, game.Height - 20));
             QFont.End();
 
             game.SwapBuffers();
         }
 
         private static void GameUpdateFrame(object sender, FrameEventArgs args) {
-            Scheduler.Tick((GameWindow) sender, args);
+            Scheduler.Tick((GameWindow)sender, args);
             _elapsed += args.Time;
         }
 
@@ -227,8 +229,7 @@ namespace VirusFactory.OpenTK {
                     path[1].FirstPath.PreviousSteps = path[0];
                     pathingCities = path[2].ToArray();
                     _path = path[2];
-                }
-                else {
+                } else {
                     var path = new[] {
                         AStar.FindPath(pathingCities[0], _selectedCountry[0].Outbound[_selectedCountry[1]], Distance,
                             Distance),
@@ -240,8 +241,7 @@ namespace VirusFactory.OpenTK {
                     pathingCities = path[1].ToArray();
                     _path = path[1];
                 }
-            }
-            else {
+            } else {
                 var path = new[] {
                     AStar.FindPath(pathingCities[0], _selectedCountry[0].Cities[0], Distance, Distance),
                     new Path<City>(_selectedCountry[1].Cities[0]) {
@@ -255,13 +255,13 @@ namespace VirusFactory.OpenTK {
                 _path = path[2];
             }
 
-            _paths = new BufferElement[(pathingCities.Length - 1)*2];
+            _paths = new BufferElement[(pathingCities.Length - 1) * 2];
 
             for (var i = 0; i < pathingCities.Length - 1; i++) {
-                var d = (float) ((pathingCities[i].Longitude/_scale) + _add.X);
+                var d = (float)((pathingCities[i].Longitude / _scale) + _add.X);
                 if (d < -1)
                     d += 2;
-                var d2 = (float) ((pathingCities[i + 1].Longitude/_scale) + _add.X);
+                var d2 = (float)((pathingCities[i + 1].Longitude / _scale) + _add.X);
                 if (d2 < -1)
                     d2 += 2;
                 var color = pathingCities[i].Country == pathingCities[i + 1].Country ||
@@ -269,14 +269,15 @@ namespace VirusFactory.OpenTK {
                     ? new Vector4(1f, 0f, 0f, 1f)
                     : new Vector4(0f, 0f, 1f, 1f);
 
-                _paths[i*2] = new BufferElement(new Vector2(d, (float) ((pathingCities[i].Latitude/_scale) + _add.Y)),
+                _paths[i * 2] = new BufferElement(new Vector2(d, (float)((pathingCities[i].Latitude / _scale) + _add.Y)),
                     color);
-                _paths[(i*2) + 1] =
-                    new BufferElement(new Vector2(d2, (float) ((pathingCities[i + 1].Latitude/_scale) + _add.Y)), color);
+                _paths[(i * 2) + 1] =
+                    new BufferElement(new Vector2(d2, (float)((pathingCities[i + 1].Latitude / _scale) + _add.Y)), color);
             }
 
             _pathBuffer?.Dispose();
-            _pathBuffer = new VertexBuffer<BufferElement>(_paths, () => {
+            _pathBuffer = new VertexBuffer<BufferElement>(_paths, () =>
+            {
                 GL.EnableClientState(ArrayCap.VertexArray);
                 GL.EnableClientState(ArrayCap.ColorArray);
                 GL.VertexPointer(2, VertexPointerType.Float, BufferElement.SizeInBytes, new IntPtr(0));
@@ -287,21 +288,22 @@ namespace VirusFactory.OpenTK {
         private static unsafe void UpdateVbos(GameWindow sender, FrameEventArgs e) {
             GL.BindBuffer(BufferTarget.ArrayBuffer, _citiesBuffer.Id);
             var videoMemoryIntPtr = GL.MapBuffer(BufferTarget.ArrayBuffer, BufferAccess.ReadWrite);
-            var videoMemory = (BufferElement*) videoMemoryIntPtr.ToPointer();
+            var videoMemory = (BufferElement*)videoMemoryIntPtr.ToPointer();
             for (var i = 0; i < _points.Length; i++) {
-                var sin = (float) (Math.Sin((_elapsed/(Math.PI/5)) + (videoMemory[i].Vertex.X*Math.PI))/2) + 0.5f;
+                var sin = (float)(Math.Sin((_elapsed / (Math.PI / 5)) + (videoMemory[i].Vertex.X * Math.PI)) / 2) + 0.5f;
                 videoMemory[i].Color = new Vector4(videoMemory[i].Color.X, videoMemory[i].Color.Y,
-                    videoMemory[i].Color.Z, sin*videoMemory[i].OriginalW);
+                    videoMemory[i].Color.Z, sin * videoMemory[i].OriginalW);
             }
             GL.UnmapBuffer(BufferTarget.ArrayBuffer);
         }
 
         private static void GameLoad(object sender, EventArgs e) {
-            ((GameWindow) sender).VSync = VSyncMode.Adaptive;
+            ((GameWindow)sender).VSync = VSyncMode.Adaptive;
             GL.PointSize(2);
             GL.ClearColor(0f, 0f, 0f, 1f);
 
-            Action prep = () => {
+            Action prep = () =>
+            {
                 GL.EnableClientState(ArrayCap.VertexArray);
                 GL.EnableClientState(ArrayCap.ColorArray);
                 GL.VertexPointer(2, VertexPointerType.Float, BufferElement.SizeInBytes, new IntPtr(0));
@@ -311,15 +313,15 @@ namespace VirusFactory.OpenTK {
             _highwayBuffer = new VertexBuffer<BufferElement>(_highways, prep);
 
             _debugFont = new QFont(".\\fonts\\pixelmix_micro.ttf", 6) {
-                Options = {LockToPixel = true, Monospacing = QFontMonospacing.Yes}
+                Options = { LockToPixel = true, Monospacing = QFontMonospacing.Yes }
             };
-            _uiFont = new QFont(".\\fonts\\pixelmix.ttf", 9) {Options = {LockToPixel = true}};
+            _uiFont = new QFont(".\\fonts\\pixelmix.ttf", 9) { Options = { LockToPixel = true } };
 
             // Scheduler setup
             Scheduler.TickItems.Add(new TickItem(UpdatePath, new TimeSpan(0, 0, 0, 0, 250), true));
-            Scheduler.TickItems.Add(new TickItem(UpdateVbos, new TimeSpan(0, 0, 0, 0, 1000/30)));
+            Scheduler.TickItems.Add(new TickItem(UpdateVbos, new TimeSpan(0, 0, 0, 0, 1000 / 30)));
 
-            SetViewport((GameWindow) sender);
+            SetViewport((GameWindow)sender);
         }
 
         private static BufferElement GenBufferElement(City o) {
@@ -333,7 +335,7 @@ namespace VirusFactory.OpenTK {
                 color = o.Country.Outbound.ContainsValue(o) ? new Vector4(1f, 1f, 0f, c) : new Vector4(0f, 1f, 0f, c);
             }
 
-            return new BufferElement(new Vector2((float) o.Point.X, (float) o.Point.Y), color);
+            return new BufferElement(new Vector2((float)o.Point.X, (float)o.Point.Y), color);
         }
 
         private static void Scaling(out float scale, out Vector2 add, out RectangleF bounds) {
@@ -343,16 +345,17 @@ namespace VirusFactory.OpenTK {
             var minY = _points.Min(o => o.Vertex.Y);
             var minX = _points.Min(o => o.Vertex.X);
 
-            var scaleHeight = Math.Abs(maxY - minY)/2;
-            var scaleWidth = Math.Abs(maxX - minX)/2;
+            var scaleHeight = Math.Abs(maxY - minY) / 2;
+            var scaleWidth = Math.Abs(maxX - minX) / 2;
 
             scale = Math.Max(scaleHeight, scaleWidth);
 
             add = new Vector2(-0.3f, 0);
             var addt = add;
             var scalet = scale;
-            Func<float, float, float, float> selector = (o, s, a) => {
-                var f = (o/s) + a;
+            Func<float, float, float, float> selector = (o, s, a) =>
+            {
+                var f = (o / s) + a;
                 if (f < -1)
                     f += 2;
                 return f;
@@ -362,30 +365,32 @@ namespace VirusFactory.OpenTK {
             minX = _points.Min(o => selector(o.Vertex.X, scalet, addt.X));
             minY = _points.Min(o => selector(o.Vertex.Y, scalet, addt.Y));
 
-            add.Y = -(minY + ((maxY - minY)/2));
+            add.Y = -(minY + ((maxY - minY) / 2));
             bounds = new RectangleF(minX, minY, maxX - minX, maxY - minY);
         }
 
         private static void TransformPoints(float scale, Vector2 add) {
             for (var i = 0; i < _points.Length; i++) {
-                var f = (_points[i].Vertex.X/scale) + add.X;
+                var f = (_points[i].Vertex.X / scale) + add.X;
                 if (f < -1)
                     f += 2;
-                _points[i] = new BufferElement(new Vector2(f, (_points[i].Vertex.Y/scale) + add.Y), _points[i].Color);
+                _points[i] = new BufferElement(new Vector2(f, (_points[i].Vertex.Y / scale) + add.Y), _points[i].Color);
             }
         }
 
         private static BufferElement[] GenHighways(float scale, Vector2 add) {
-            return _countries.SelectMany(o => {
+            return _countries.SelectMany(o =>
+            {
                 return
                     o.Cities.SelectMany(p => p.BorderCities.Select(q => new Connection<City>(p, q)))
                         .Distinct()
-                        .SelectMany(x => {
+                        .SelectMany(x =>
+                        {
                             var f = GdpStretch(o);
-                            var x3 = (x.LocationA.Point.X/scale) + add.X;
-                            var y3 = (x.LocationA.Point.Y/scale) + add.Y;
-                            var x4 = (x.LocationB.Point.X/scale) + add.X;
-                            var y4 = (x.LocationB.Point.Y/scale) + add.Y;
+                            var x3 = (x.LocationA.Point.X / scale) + add.X;
+                            var y3 = (x.LocationA.Point.Y / scale) + add.Y;
+                            var x4 = (x.LocationB.Point.X / scale) + add.X;
+                            var y4 = (x.LocationB.Point.Y / scale) + add.Y;
                             if (x3 < -1)
                                 x3 += 2;
                             if (x4 < -1)
@@ -401,10 +406,10 @@ namespace VirusFactory.OpenTK {
         }
 
         private static float GdpStretch(Country o) {
-            var t = (float) o.GdpPerCapita;
-            var d = (float) World.Countries.Max(y => y.GdpPerCapita);
+            var t = (float)o.GdpPerCapita;
+            var d = (float)World.Countries.Max(y => y.GdpPerCapita);
             t /= d;
-            return -0.9f*t*(t - 2) + 0.1f;
+            return -0.9f * t * (t - 2) + 0.1f;
         }
 
         private static double Distance(City city, City city1) {

@@ -1,10 +1,12 @@
-﻿using System.Drawing;
-using OpenTK;
+﻿using OpenTK;
 using OpenTK.Graphics;
 using QuickFont;
+using System.Drawing;
 
 namespace VirusFactory.OpenTK.FSM.Elements {
+
     public class TextElement : UiElement {
+
         #region Fields
 
         private readonly Font _innerFont;
@@ -57,7 +59,7 @@ namespace VirusFactory.OpenTK.FSM.Elements {
         }
 
         public override Vector2 Position { get; set; } = Vector2.Zero;
-        
+
         public TransformViewport Viewport {
             get { return _viewport; }
             set {
@@ -82,7 +84,7 @@ namespace VirusFactory.OpenTK.FSM.Elements {
         public override RectangleF Bounds {
             get {
                 if (Dynamic || _bounds == RectangleF.Empty)
-                    _bounds = new RectangleF(new PointF(Position.X - (Size.Width/2), Position.Y), Size);
+                    _bounds = new RectangleF(new PointF(Position.X - (Size.Width / 2), Position.Y), Size);
 
                 return _bounds;
             }
@@ -99,7 +101,7 @@ namespace VirusFactory.OpenTK.FSM.Elements {
             _style = style;
         }
 
-        public TextElement(GameWindow owner, string text, Font font): base(owner) {
+        public TextElement(GameWindow owner, string text, Font font) : base(owner) {
             Text = text;
             _innerFont = font;
         }
@@ -128,9 +130,9 @@ namespace VirusFactory.OpenTK.FSM.Elements {
             Font.Options.Colour = Color;
             QFont.Begin();
             if (Dynamic)
-                Font.Print(Text, Alignment, Position+PositionAdd);
+                Font.Print(Text, Alignment, Position + PositionAdd);
             else
-                Font.Print(_processedText, Position+PositionAdd);
+                Font.Print(_processedText, Position + PositionAdd);
             QFont.End();
         }
 

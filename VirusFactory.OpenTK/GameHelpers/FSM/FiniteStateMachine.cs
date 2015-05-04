@@ -2,8 +2,11 @@
 using System.Linq;
 
 namespace VirusFactory.OpenTK.GameHelpers.FSM {
+
     public abstract class FiniteStateMachine<T> where T : State {
+
         public List<T> States { get; } = new List<T>();
+
         public T CurrState { get; set; }
 
         public void Transition(T to) {

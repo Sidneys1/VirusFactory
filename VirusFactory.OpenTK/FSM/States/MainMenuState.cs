@@ -1,12 +1,10 @@
-﻿using System;
-using System.Drawing;
-using System.Linq;
-using MoreLinq;
+﻿using MoreLinq;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using QuickFont;
+using System.Linq;
 using VirusFactory.OpenTK.FSM.Behaviours;
 using VirusFactory.OpenTK.FSM.Elements;
 using VirusFactory.OpenTK.FSM.Interface;
@@ -15,6 +13,7 @@ using VirusFactory.OpenTK.GameHelpers.Behaviourals;
 using VirusFactory.OpenTK.GameHelpers.FSM;
 
 namespace VirusFactory.OpenTK.FSM.States {
+
     public class MainMenuState : GameStateBase, IInputtable, IUpdateable {
 
         #region Properties
@@ -24,6 +23,7 @@ namespace VirusFactory.OpenTK.FSM.States {
             new Transition(Command.Deactivate, typeof(MainMenuState), typeof(PauseMenuState)),
             new Transition(Command.Deactivate, typeof(MainMenuState), null)
         };
+
         public override Transition[] FromThisTransitions { get; }
         = {
             new Transition(Command.Deactivate, typeof(IngameState), typeof(MainMenuState)),
@@ -35,7 +35,8 @@ namespace VirusFactory.OpenTK.FSM.States {
         #region Constructors
 
         public MainMenuState(GameWindow owner, GameFiniteStateMachine parent) : base(owner, parent) {
-            var uiElementBehavior = new Behaviour<GameTriggers, UiElement>(o => {
+            var uiElementBehavior = new Behaviour<GameTriggers, UiElement>(o =>
+            {
                 var floatPos = EaseMouse(o.MousePosition);
                 o.PositionAdd = floatPos / ((float)o.AttachedProperties["floatiness"]);
             });
@@ -43,11 +44,11 @@ namespace VirusFactory.OpenTK.FSM.States {
             var startButton = new TextElement(owner, "start", ".\\fonts\\toxica.ttf", 40f) {
                 NormalColor = Color4.Gray,
                 Position = new Vector2(0f, -0.4f),
-                Behaviours = { { GameTriggers.MouseMove, uiElementBehavior} },
+                Behaviours = { { GameTriggers.MouseMove, uiElementBehavior } },
                 AttachedProperties = { { "floatiness", 50f } },
                 MouseOverColor = Color4.White
             };
-            
+
             startButton.Clicked += args =>
             {
                 StateMachine.Transition(parent.States.OfType<IngameState>().FirstOrDefault() ?? new IngameState(Owner, StateMachine));
@@ -138,7 +139,7 @@ namespace VirusFactory.OpenTK.FSM.States {
             GameElements.OfType<IInputtable>().ForEach(o => o.MouseWheel(e));
         }
 
-        #endregion
+        #endregion IInputtable
 
         #region IUpdateable
 
@@ -146,8 +147,8 @@ namespace VirusFactory.OpenTK.FSM.States {
             GameElements.OfType<IUpdateable>().ForEach(o => o.UpdateFrame(e));
         }
 
-        #endregion
-        
+        #endregion IUpdateable
+
         #region Static Helpers
 
         private static Vector2 EaseMouse(Vector2 t) {
@@ -160,7 +161,6 @@ namespace VirusFactory.OpenTK.FSM.States {
             return Easing.EaseOut(t, EasingType.Quadratic);
         }
 
-        #endregion
-
+        #endregion Static Helpers
     }
 }

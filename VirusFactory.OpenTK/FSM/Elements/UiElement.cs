@@ -1,9 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Input;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
 using VirusFactory.OpenTK.FSM.Behaviours;
 using VirusFactory.OpenTK.FSM.Interface;
 using VirusFactory.OpenTK.GameHelpers;
@@ -12,6 +12,7 @@ using VirusFactory.OpenTK.GameHelpers.Behaviourals;
 namespace VirusFactory.OpenTK.FSM.Elements {
 
     public abstract class UiElement : GameElementBase, IBehavioral<GameTriggers, UiElement>, IRenderable, IInputtable {
+
         #region Properties
 
         public Vector2 MousePosition { get; protected set; }
@@ -55,10 +56,17 @@ namespace VirusFactory.OpenTK.FSM.Elements {
 
         #region Methods
 
-        public virtual void RenderFrame(FrameEventArgs e) { }
-        public virtual void KeyDown(KeyboardKeyEventArgs e) { }
-        public virtual void KeyPress(KeyPressEventArgs e) { }
-        public virtual void KeyUp(KeyPressEventArgs e) { }
+        public virtual void RenderFrame(FrameEventArgs e) {
+        }
+
+        public virtual void KeyDown(KeyboardKeyEventArgs e) {
+        }
+
+        public virtual void KeyPress(KeyPressEventArgs e) {
+        }
+
+        public virtual void KeyUp(KeyPressEventArgs e) {
+        }
 
         public virtual void MouseDown(MouseButtonEventArgs e) {
             if (IsMouseOver && e.Button == MouseButton.Left)
@@ -73,8 +81,11 @@ namespace VirusFactory.OpenTK.FSM.Elements {
                 Clicked?.Invoke(new EventArgs());
         }
 
-        public virtual void MouseEnter() { }
-        public virtual void MouseLeave() { }
+        public virtual void MouseEnter() {
+        }
+
+        public virtual void MouseLeave() {
+        }
 
         public virtual void MouseMove(MouseMoveEventArgs e) {
             MousePosition = new Vector2(e.X / (float)Owner.Width, e.Y / (float)Owner.Height) * 2 - new Vector2(1f, 1f);
@@ -83,7 +94,9 @@ namespace VirusFactory.OpenTK.FSM.Elements {
             Trigger(GameTriggers.MouseMove);
         }
 
-        public virtual void MouseWheel(MouseWheelEventArgs e) { }
+        public virtual void MouseWheel(MouseWheelEventArgs e) {
+        }
+
         public void Trigger(GameTriggers trigger) {
             if (!Behaviours.ContainsKey(trigger)) return;
             foreach (var behaviourBase in Behaviours[trigger]) {

@@ -1,14 +1,18 @@
-﻿using System;
-using OpenTK;
+﻿using OpenTK;
+using System;
 using VirusFactory.OpenTK.GameHelpers.FSM;
 
 namespace VirusFactory.OpenTK.FSM.States {
-    public class PauseMenuState : GameStateBase{
+
+    public class PauseMenuState : GameStateBase {
+
         public PauseMenuState(GameWindow owner, GameFiniteStateMachine parent) : base(owner, parent) {
         }
 
         public override Transition[] ToThisTransitions { get; }
+
         public override Transition[] FromThisTransitions { get; }
+
         public override void Enter() {
             throw new NotImplementedException();
         }

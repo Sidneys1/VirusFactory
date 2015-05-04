@@ -1,6 +1,7 @@
 ﻿using System;
 
 namespace VirusFactory.OpenTK.GameHelpers {
+
     public enum EasingType {
         Step,
         Linear,
@@ -53,6 +54,7 @@ namespace VirusFactory.OpenTK.GameHelpers {
         public static float EaseInOut(double linearStep, EasingType easeInType, EasingType easeOutType) {
             return linearStep < 0.5 ? EaseInOut(linearStep, easeInType) : EaseInOut(linearStep, easeOutType);
         }
+
         public static float EaseInOut(double linearStep, EasingType type) {
             switch (type) {
                 case EasingType.Step: return linearStep < 0.5 ? 0 : 1;
@@ -70,16 +72,18 @@ namespace VirusFactory.OpenTK.GameHelpers {
 
         #region Classes
 
-        static class Sine {
+        private static class Sine {
 
             #region Methods
 
             public static float EaseIn(double s) {
                 return (float)Math.Sin(s * MathHelper.HALF_PI - MathHelper.HALF_PI) + 1;
             }
+
             public static float EaseOut(double s) {
                 return (float)Math.Sin(s * MathHelper.HALF_PI);
             }
+
             public static float EaseInOut(double s) {
                 return (float)(Math.Sin(s * MathHelper.PI - MathHelper.HALF_PI) + 1) / 2;
             }
@@ -87,17 +91,19 @@ namespace VirusFactory.OpenTK.GameHelpers {
             #endregion Methods
         }
 
-        static class Power {
+        private static class Power {
 
             #region Methods
 
             public static float EaseIn(double s, int power) {
                 return (float)Math.Pow(s, power);
             }
+
             public static float EaseOut(double s, int power) {
                 var sign = power % 2 == 0 ? -1 : 1;
                 return (float)(sign * (Math.Pow(s - 1, power) + sign));
             }
+
             public static float EaseInOut(double s, int power) {
                 s *= 2;
                 if (s < 1) return EaseIn(s, power) / 2;
@@ -128,5 +134,4 @@ namespace VirusFactory.OpenTK.GameHelpers {
 
         #endregion Methods
     }
-
 }

@@ -1,9 +1,13 @@
 ﻿using System.Linq;
 
 namespace VirusFactory.OpenTK.GameHelpers.FSM {
+
     public abstract class State {
+
         public StateMode Mode { get; private set; }
+
         public abstract Transition[] ToThisTransitions { get; }
+
         public abstract Transition[] FromThisTransitions { get; }
 
         protected State(StateMode initialMode) {
@@ -18,6 +22,7 @@ namespace VirusFactory.OpenTK.GameHelpers.FSM {
                 case Command.Deactivate:
                     Exit();
                     break;
+
                 case Command.Pause:
                     Pause();
                     break;
