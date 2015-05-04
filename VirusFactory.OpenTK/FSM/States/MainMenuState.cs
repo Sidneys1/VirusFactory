@@ -16,6 +16,9 @@ using VirusFactory.OpenTK.GameHelpers.FSM;
 
 namespace VirusFactory.OpenTK.FSM.States {
     public class MainMenuState : GameStateBase, IInputtable, IUpdateable {
+
+        #region Properties
+
         public override Transition[] ToThisTransitions { get; }
         = {
             new Transition(Command.Deactivate, typeof(MainMenuState), typeof(PauseMenuState)),
@@ -26,11 +29,15 @@ namespace VirusFactory.OpenTK.FSM.States {
             new Transition(Command.Deactivate, typeof(IngameState), typeof(MainMenuState)),
             new Transition(Command.Deactivate, null, typeof(MainMenuState))
         };
-        
+
+        #endregion Properties
+
+        #region Constructors
+
         public MainMenuState(GameWindow owner, GameFiniteStateMachine parent) : base(owner, parent) {
-            var uiElementBehavior = new BehaviourBase<GameTriggers, UiElement>(o => {
+            var uiElementBehavior = new Behaviour<GameTriggers, UiElement>(o => {
                 var floatPos = EaseMouse(o.MousePosition);
-                o.PositionAdd = floatPos / ((float)o.AttachedProperties["floatiness"] * 2f);
+                o.PositionAdd = floatPos / ((float)o.AttachedProperties["floatiness"]);
             });
 
             var startButton = new TextElement(owner, "start", ".\\fonts\\toxica.ttf", 40f) {
@@ -40,6 +47,7 @@ namespace VirusFactory.OpenTK.FSM.States {
                 AttachedProperties = { { "floatiness", 50f } },
                 MouseOverColor = Color4.White
             };
+            
             startButton.Clicked += args =>
             {
                 StateMachine.Transition(parent.States.OfType<IngameState>().FirstOrDefault() ?? new IngameState(Owner, StateMachine));
@@ -70,6 +78,10 @@ namespace VirusFactory.OpenTK.FSM.States {
             GameElements.Add(exitButton);
         }
 
+        #endregion Constructors
+
+        #region Methods
+
         public override void RenderFrame(FrameEventArgs e) {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
             GL.PopAttrib();
@@ -83,61 +95,72 @@ namespace VirusFactory.OpenTK.FSM.States {
             Owner.SwapBuffers();
         }
 
+        #endregion Methods
+
         #region IInputtable
 
-        public void KeyDown(KeyboardKeyEventArgs e) {
+        void IInputtable.KeyDown(KeyboardKeyEventArgs e) {
             GameElements.OfType<IInputtable>().ForEach(o => o.KeyDown(e));
 
             if (e.Key == Key.Escape)
                 Owner.Exit();
         }
 
-        public void KeyPress(KeyPressEventArgs e) {
+        void IInputtable.KeyPress(KeyPressEventArgs e) {
             GameElements.OfType<IInputtable>().ForEach(o => o.KeyPress(e));
         }
 
-        public void KeyUp(KeyPressEventArgs e) {
+        void IInputtable.KeyUp(KeyPressEventArgs e) {
             GameElements.OfType<IInputtable>().ForEach(o => o.KeyUp(e));
         }
 
-        public void MouseDown(MouseButtonEventArgs e) {
+        void IInputtable.MouseDown(MouseButtonEventArgs e) {
             GameElements.OfType<IInputtable>().ForEach(o => o.MouseDown(e));
         }
 
-        public void MouseUp(MouseButtonEventArgs e) {
+        void IInputtable.MouseUp(MouseButtonEventArgs e) {
             GameElements.OfType<IInputtable>().ForEach(o => o.MouseUp(e));
         }
 
-        public void MouseEnter() {
+        void IInputtable.MouseEnter() {
             GameElements.OfType<IInputtable>().ForEach(o => o.MouseEnter());
         }
 
-        public void MouseLeave() {
+        void IInputtable.MouseLeave() {
             GameElements.OfType<IInputtable>().ForEach(o => o.MouseLeave());
         }
 
-        public void MouseMove(MouseMoveEventArgs e) {
+        void IInputtable.MouseMove(MouseMoveEventArgs e) {
             GameElements.OfType<IInputtable>().ForEach(o => o.MouseMove(e));
         }
 
-        public void MouseWheel(MouseWheelEventArgs e) {
+        void IInputtable.MouseWheel(MouseWheelEventArgs e) {
             GameElements.OfType<IInputtable>().ForEach(o => o.MouseWheel(e));
         }
 
         #endregion
 
-        public void UpdateFrame(FrameEventArgs e) {
+        #region IUpdateable
+
+        void IUpdateable.UpdateFrame(FrameEventArgs e) {
             GameElements.OfType<IUpdateable>().ForEach(o => o.UpdateFrame(e));
         }
+
+        #endregion
+        
+        #region Static Helpers
 
         private static Vector2 EaseMouse(Vector2 t) {
             return new Vector2(EaseMouse(t.X), EaseMouse(t.Y));
         }
+
         private static float EaseMouse(float t) {
             if (t < 0)
                 return -Easing.EaseOut(-t, EasingType.Quadratic);
             return Easing.EaseOut(t, EasingType.Quadratic);
         }
+
+        #endregion
 
     }
 }

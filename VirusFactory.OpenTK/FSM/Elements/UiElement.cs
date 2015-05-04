@@ -11,7 +11,7 @@ using VirusFactory.OpenTK.GameHelpers.Behaviourals;
 
 namespace VirusFactory.OpenTK.FSM.Elements {
 
-    public abstract class UiElement : GameElementBase, IBehaviored<GameTriggers, UiElement>, IRenderable, IInputtable {
+    public abstract class UiElement : GameElementBase, IBehavioral<GameTriggers, UiElement>, IRenderable, IInputtable {
         #region Properties
 
         public Vector2 MousePosition { get; protected set; }
@@ -32,7 +32,7 @@ namespace VirusFactory.OpenTK.FSM.Elements {
 
         public virtual Color4 Color => MouseOverColor.HasValue && IsMouseOver ? MouseOverColor.Value : NormalColor;
 
-        public MultiMap<GameTriggers, BehaviourBase<GameTriggers, UiElement>> Behaviours { get; } = new MultiMap<GameTriggers, BehaviourBase<GameTriggers, UiElement>>();
+        public MultiMap<GameTriggers, Behaviour<GameTriggers, UiElement>> Behaviours { get; } = new MultiMap<GameTriggers, Behaviour<GameTriggers, UiElement>>();
 
         public Dictionary<object, object> AttachedProperties { get; } = new Dictionary<object, object>();
 
