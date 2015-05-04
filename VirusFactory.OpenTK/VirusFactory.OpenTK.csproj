@@ -50,8 +50,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FSM\Behaviours\GameBehavior.cs" />
+    <Compile Include="FSM\Behaviours\GameTriggers.cs" />
+    <Compile Include="FSM\Behaviours\IBehavioredUiElement.cs" />
+    <Compile Include="FSM\Behaviours\IGameBehaviored.cs" />
+    <Compile Include="FSM\Elements\IUiElement.cs" />
+    <Compile Include="FSM\Behaviours\UiElementBehavior.cs" />
     <Compile Include="FSM\Elements\TextElement.cs" />
-    <Compile Include="FSM\Elements\FloatTextElement.cs" />
     <Compile Include="FSM\Elements\UiElement.cs" />
     <Compile Include="FSM\Elements\VboElement.cs" />
     <Compile Include="FSM\GameFiniteStateMachine.cs" />
@@ -60,6 +65,8 @@
     <Compile Include="FSM\States\IngameState.cs" />
     <Compile Include="FSM\States\MainMenuState.cs" />
     <Compile Include="FSM\States\PauseMenuState.cs" />
+    <Compile Include="GameHelpers\Behaviourals\BehaviorBase.cs" />
+    <Compile Include="GameHelpers\Behaviourals\Behaviored.cs" />
     <Compile Include="GameHelpers\Easing.cs" />
     <Compile Include="GameHelpers\FSM\Command.cs" />
     <Compile Include="GameHelpers\FSM\FiniteStateMachine.cs" />
@@ -67,6 +74,7 @@
     <Compile Include="GameHelpers\FSM\State.cs" />
     <Compile Include="GameHelpers\FSM\StateMode.cs" />
     <Compile Include="GameHelpers\FSM\Transition.cs" />
+    <Compile Include="GameHelpers\MultiMap.cs" />
     <Compile Include="GameHelpers\RectangleD.cs" />
     <Compile Include="GameHelpers\TickItem.cs" />
     <Compile Include="GameHelpers\TickScheduler.cs" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Linq;
 using MoreLinq;
 using OpenTK;
@@ -6,13 +7,15 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using QuickFont;
+using VirusFactory.OpenTK.FSM.Behaviours;
 using VirusFactory.OpenTK.FSM.Elements;
 using VirusFactory.OpenTK.FSM.Interface;
+using VirusFactory.OpenTK.GameHelpers;
 using VirusFactory.OpenTK.GameHelpers.FSM;
 
 namespace VirusFactory.OpenTK.FSM.States {
     public class MainMenuState : GameStateBase, IInputtable, IUpdateable {
-        private readonly FloatTextElement _startButton, _exitButton;
+        private readonly TextElement _startButton, _exitButton;
 
         public override Transition[] ToThisTransitions { get; }
         = {
@@ -24,31 +27,39 @@ namespace VirusFactory.OpenTK.FSM.States {
             new Transition(Command.Deactivate, typeof(IngameState), typeof(MainMenuState)),
             new Transition(Command.Deactivate, null, typeof(MainMenuState))
         };
-
+        
         public MainMenuState(GameWindow owner, GameFiniteStateMachine parent) : base(owner, parent) {
-            _startButton = new FloatTextElement(owner, "start", ".\\fonts\\toxica.ttf", 40f) {
-                Color = Color4.Gray,
+            var uiElementBehavior = new UiElementBehavior(o => {
+                var floatPos = EaseMouse(o.MousePosition);
+                o.PositionAdd = floatPos / ((float)o.AttachedProperties["floatiness"] * 2f);
+            });
+
+            _startButton = new TextElement(owner, "start", ".\\fonts\\toxica.ttf", 40f) {
+                NormalColor = Color4.Gray,
                 Position = new Vector2(0f, -0.4f),
-                Floatiness = 50f,
+                Behaviours = { { GameTriggers.MouseMove, uiElementBehavior} },
+                AttachedProperties = { { "floatiness", 50f } },
                 MouseOverColor = Color4.White
             };
-
             _startButton.Clicked += args =>
             {
                 StateMachine.Transition(parent.States.OfType<IngameState>().FirstOrDefault() ?? new IngameState(Owner, StateMachine));
             };
 
-            _exitButton = new FloatTextElement(owner, "exit", ".\\fonts\\toxica.ttf", 40f) {
-                Color = Color4.Gray,
+            _exitButton = new TextElement(owner, "exit", ".\\fonts\\toxica.ttf", 40f) {
+                NormalColor = Color4.Gray,
                 Position = new Vector2(0f, -0.15f),
-                Floatiness = 50f,
-                MouseOverColor = Color4.White
+                Behaviours = { { GameTriggers.MouseMove, uiElementBehavior } },
+                AttachedProperties = { { "floatiness", 50f } },
+                MouseOverColor = Color4.White,
             };
 
             _exitButton.Clicked += args => owner.Exit();
 
-            GameElements.Add(new FloatTextElement(owner, "Apoplexy", ".\\fonts\\toxica.ttf", 72f) {
-                Color = Color4.DarkRed,
+            GameElements.Add(new TextElement(owner, "Apoplexy", ".\\fonts\\toxica.ttf", 72f) {
+                NormalColor = Color4.DarkRed,
+                Behaviours = { { GameTriggers.MouseMove, uiElementBehavior } },
+                AttachedProperties = { { "floatiness", 25f } },
                 Position = new Vector2(0f, -0.75f)
             });
 
@@ -120,5 +131,15 @@ namespace VirusFactory.OpenTK.FSM.States {
         public void UpdateFrame(FrameEventArgs e) {
             GameElements.OfType<IUpdateable>().ForEach(o => o.UpdateFrame(e));
         }
+
+        private static Vector2 EaseMouse(Vector2 t) {
+            return new Vector2(EaseMouse(t.X), EaseMouse(t.Y));
+        }
+        private static float EaseMouse(float t) {
+            if (t < 0)
+                return -Easing.EaseOut(-t, EasingType.Quadratic);
+            return Easing.EaseOut(t, EasingType.Quadratic);
+        }
+
     }
 }

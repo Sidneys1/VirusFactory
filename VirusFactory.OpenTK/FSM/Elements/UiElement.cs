@@ -1,21 +1,59 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using OpenTK;
+using OpenTK.Graphics;
 using OpenTK.Input;
+using VirusFactory.OpenTK.FSM.Behaviours;
 using VirusFactory.OpenTK.FSM.Interface;
+using VirusFactory.OpenTK.GameHelpers;
+using VirusFactory.OpenTK.GameHelpers.Behaviourals;
 
 namespace VirusFactory.OpenTK.FSM.Elements {
-    public abstract class UiElement : GameElementBase, IRenderable, IInputtable {
-        protected Vector2 MousePosition;
+
+    public abstract class UiElement : GameElementBase, IBehavioredUiElement, IRenderable, IInputtable {
+        #region Properties
+
+        public Vector2 MousePosition { get; protected set; }
+
+        public abstract SizeF Size { get; }
+
+        public abstract RectangleF Bounds { get; }
+
+        public bool IsMouseOver { get; private set; }
+
+        public bool IsMouseDown { get; private set; }
+
+        public virtual Vector2 Position { get; set; }
+
+        public virtual Vector2 PositionAdd { get; set; }
+
+        public virtual Color4 NormalColor { get; set; }
+
+        public virtual Color4 Color => MouseOverColor.HasValue && IsMouseOver ? MouseOverColor.Value : NormalColor;
+
+        public MultiMap<GameTriggers, BehaviourBase<GameTriggers, IBehavioredUiElement>> Behaviours { get; } = new MultiMap<GameTriggers, BehaviourBase<GameTriggers, IBehavioredUiElement>>();
+
+        public Dictionary<object, object> AttachedProperties { get; } = new Dictionary<object, object>();
+
+        public abstract Color4? MouseOverColor { get; set; }
+
+        #endregion Properties
+
+        #region Events
+
+        public event Action<EventArgs> Clicked;
+
+        #endregion Events
+
+        #region Constructors
 
         protected UiElement(GameWindow owner) : base(owner) {
         }
 
-        public abstract SizeF Size { get; }
-        public abstract RectangleF Bounds { get; }
-        public bool IsMouseOver { get; private set; }
-        public bool IsMouseDown { get; private set; }
-        public event Action<EventArgs> Clicked;
+        #endregion Constructors
+
+        #region Methods
 
         public virtual void RenderFrame(FrameEventArgs e) { }
         public virtual void KeyDown(KeyboardKeyEventArgs e) { }
@@ -41,8 +79,18 @@ namespace VirusFactory.OpenTK.FSM.Elements {
         public virtual void MouseMove(MouseMoveEventArgs e) {
             MousePosition = new Vector2(e.X / (float)Owner.Width, e.Y / (float)Owner.Height) * 2 - new Vector2(1f, 1f);
             IsMouseOver = Bounds.Contains(MousePosition.X, MousePosition.Y);
+
+            Trigger(GameTriggers.MouseMove);
         }
 
         public virtual void MouseWheel(MouseWheelEventArgs e) { }
+        public void Trigger(GameTriggers trigger) {
+            if (!Behaviours.ContainsKey(trigger)) return;
+            foreach (var behaviourBase in Behaviours[trigger]) {
+                behaviourBase.Action.Invoke(this);
+            }
+        }
+
+        #endregion Methods
     }
 }

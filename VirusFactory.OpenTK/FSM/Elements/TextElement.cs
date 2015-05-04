@@ -56,17 +56,8 @@ namespace VirusFactory.OpenTK.FSM.Elements {
             }
         }
 
-        public Vector2 Position { get; set; } = Vector2.Zero;
-
-        public Color4 Color {
-            get { return _color; }
-            set {
-                _color = value;
-                if (Font != null)
-                    Font.Options.Colour = _color;
-            }
-        }
-
+        public override Vector2 Position { get; set; } = Vector2.Zero;
+        
         public TransformViewport Viewport {
             get { return _viewport; }
             set {
@@ -134,13 +125,16 @@ namespace VirusFactory.OpenTK.FSM.Elements {
 
         public override void RenderFrame(FrameEventArgs e) {
             base.RenderFrame(e);
+            Font.Options.Colour = Color;
             QFont.Begin();
             if (Dynamic)
-                Font.Print(Text, Alignment, Position);
+                Font.Print(Text, Alignment, Position+PositionAdd);
             else
-                Font.Print(_processedText, Position);
+                Font.Print(_processedText, Position+PositionAdd);
             QFont.End();
         }
+
+        public override Color4? MouseOverColor { get; set; }
 
         public override string ToString() {
             return Text;

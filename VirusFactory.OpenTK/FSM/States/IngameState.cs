@@ -14,6 +14,9 @@ using VirusFactory.OpenTK.GameHelpers.VBOHelper;
 
 namespace VirusFactory.OpenTK.FSM.States {
     public class IngameState : GameStateBase, IUpdateable, IResizable {
+
+        #region Fields
+
         private readonly TextElement _debugText;
         private List<Country> _countries;
         private City[] _cities;
@@ -24,6 +27,27 @@ namespace VirusFactory.OpenTK.FSM.States {
         private BufferElement[] _highways;
         private Bounds _viewPort;
 
+        #endregion Fields
+
+        #region Properties
+
+        public override Transition[] ToThisTransitions { get; }
+        = {
+            new Transition(Command.Deactivate, typeof(IngameState), typeof(MainMenuState)),
+            new Transition(Command.Deactivate, typeof(IngameState), typeof(PauseMenuState))
+        };
+
+        public override Transition[] FromThisTransitions { get; }
+        = {
+            new Transition(Command.Pause, typeof(PauseMenuState), typeof(IngameState))
+        };
+
+        public World World { get; set; }
+
+        #endregion Properties
+
+        #region Constructors
+
         public IngameState(GameWindow owner, GameFiniteStateMachine parent) : base(owner, parent) {
             _debugText = new TextElement(owner, "debug me", ".\\fonts\\pixelmix_micro.ttf", 6f) {
                 Alignment = QFontAlignment.Left,
@@ -32,14 +56,9 @@ namespace VirusFactory.OpenTK.FSM.States {
             };
         }
 
-        public override Transition[] ToThisTransitions { get; } = {
-            new Transition(Command.Deactivate, typeof(IngameState), typeof(MainMenuState)),
-            new Transition(Command.Deactivate, typeof(IngameState), typeof(PauseMenuState))
-        };
+        #endregion Constructors
 
-        public override Transition[] FromThisTransitions { get; } = {
-            new Transition(Command.Pause, typeof(PauseMenuState), typeof(IngameState))
-        };
+        #region Methods
 
         public override void Load() {
             World = World.Load("world.dat");
@@ -66,12 +85,32 @@ namespace VirusFactory.OpenTK.FSM.States {
             _debugText.Font.Options.Monospacing = QFontMonospacing.Yes;
             SetViewport();
         }
-
-        public World World { get; set; }
-
         public void UpdateFrame(FrameEventArgs e) {
             _debugText.Text =
                 $"TPS: {Math.Ceiling(Owner.UpdateFrequency):0000} ({Owner.UpdateTime*1000:0.000}ms/tick), FPS: {Math.Ceiling(Owner.RenderFrequency):0000} ({Owner.RenderTime*1000:00.000}ms/frame)";
+        }
+
+        public void Resize() {
+            GL.Viewport(0, 0, Owner.Width, Owner.Height);
+            QFont.InvalidateViewport();
+            SetViewport();
+        }
+
+        public override void RenderFrame(FrameEventArgs e) {
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
+            GL.PopAttrib();
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+
+            GL.Ortho(_viewPort.Left, _viewPort.Right, _viewPort.Bottom, _viewPort.Top, 0.0, 4.0);
+
+            GL.Enable(EnableCap.PointSmooth);
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+
+            base.RenderFrame(e);
+
+            Owner.SwapBuffers();
         }
 
         private BufferElement GenBufferElement(City o) {
@@ -79,7 +118,7 @@ namespace VirusFactory.OpenTK.FSM.States {
 
             var color = new Vector4(0.4f, 0.4f, 0.4f, c);
 
-            if (o.Country.Cities[0] == o)
+            if (ReferenceEquals(o.Country.Cities[0], o))
                 color = new Vector4(0f, 0f, 1f, c);
             else if (o.IsHull) {
                 color = o.Country.Outbound.ContainsValue(o) ? new Vector4(1f, 1f, 0f, c) : new Vector4(0f, 1f, 0f, c);
@@ -184,27 +223,6 @@ namespace VirusFactory.OpenTK.FSM.States {
             _viewPort = new Bounds { Bottom = b, Left = l, Right = r, Top = t };
         }
 
-        public void Resize() {
-            GL.Viewport(0, 0, Owner.Width, Owner.Height);
-            QFont.InvalidateViewport();
-            SetViewport();
-        }
-
-        public override void RenderFrame(FrameEventArgs e) {
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
-            GL.PopAttrib();
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-
-            GL.Ortho(_viewPort.Left, _viewPort.Right, _viewPort.Bottom, _viewPort.Top, 0.0, 4.0);
-
-            GL.Enable(EnableCap.PointSmooth);
-            GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-
-            base.RenderFrame(e);
-
-            Owner.SwapBuffers();
-        }
+        #endregion Methods
     }
 }
