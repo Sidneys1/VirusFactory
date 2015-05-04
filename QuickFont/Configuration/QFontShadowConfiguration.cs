@@ -1,31 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace QuickFont
-{
-
-
-
+﻿namespace QuickFont {
 
     /// <summary>
     /// The configuration used when building a font drop shadow.
     /// </summary>
-    public class QFontShadowConfiguration
-    {
+    public class QFontShadowConfiguration {
+
         /// <summary>
         /// Scale in relation to the actual font glyphs
         /// </summary>
         public float Scale = 1.0f;
 
         /// <summary>
-        /// The blur radius. Caution: high values will greatly impact the 
+        /// The blur radius. Caution: high values will greatly impact the
         /// time it takes to build a font shadow
         /// </summary>
         public int blurRadius = 3;
 
         /// <summary>
-        /// Number of blur passes. Caution: high values will greatly impact the 
+        /// Number of blur passes. Caution: high values will greatly impact the
         /// time it takes to build a font shadow
         /// </summary>
         public int blurPasses = 2;
@@ -53,6 +45,5 @@ namespace QuickFont
         /// which is automatically added.
         /// </summary>
         public int GlyphMargin = 2;
-
     }
 }

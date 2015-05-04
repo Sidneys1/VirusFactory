@@ -2,6 +2,7 @@
 using VirusFactory.Model.Interface;
 
 namespace VirusFactory.Model.Geography {
+
     public struct Connection<T> where T : ICoordinate {
         public readonly T LocationA;
         public readonly T LocationB;

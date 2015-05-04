@@ -1,51 +1,70 @@
-﻿using System;
-using OpenTK;
+﻿using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using System;
 
 namespace VirusFactory.OpenTK.GameHelpers.VBOHelper {
-	public class VertexBuffer<T> : IDisposable where T : struct {
-		private readonly int _id;
-		private readonly Action _prep;
 
-		public bool IsDisposed { get; private set; }
+    public class VertexBuffer<T> : IDisposable where T : struct {
 
-		public VertexBuffer(T[] data, Action prep, BufferUsageHint bufferUsageHint = BufferUsageHint.DynamicDraw) {
-			if (data == null) return;
+        #region Fields
 
-			GL.GenBuffers(1, out _id);
-			GL.BindBuffer(BufferTarget.ArrayBuffer, _id);
-			GL.BufferData(BufferTarget.ArrayBuffer, new IntPtr(data.Length * BlittableValueType.StrideOf(data)), data, bufferUsageHint);
-			Length = data.Length;
-			_prep = prep;
-		}
+        private readonly int _id;
+        private readonly Action _prep;
 
-		~VertexBuffer() {
-			Dispose();
-		}
+        #endregion Fields
 
+        #region Properties
 
-		public int Length { get; }
+        public bool IsDisposed { get; private set; }
 
-		public int Id => _id;
+        public int Length { get; }
 
-		public void Render(PrimitiveType primitiveType = PrimitiveType.Points) {
-			GL.BindBuffer(BufferTarget.ArrayBuffer, _id);
-			
-			_prep.Invoke();
+        public int Id => _id;
 
-			GL.DrawArrays(primitiveType, 0, Length);
-		}
+        #endregion Properties
 
-		public void Dispose() {
-			if (IsDisposed) return;
-			try {
-				GL.DeleteBuffer(_id);
-			}
-			catch (Exception e) {
-				Console.WriteLine(e);
-			}
-			IsDisposed = true;
-		}
-	}
+        #region Constructors
+
+        public VertexBuffer(T[] data, Action prep, BufferUsageHint bufferUsageHint = BufferUsageHint.DynamicDraw) {
+            if (data == null) return;
+
+            GL.GenBuffers(1, out _id);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _id);
+            GL.BufferData(BufferTarget.ArrayBuffer, new IntPtr(data.Length * BlittableValueType.StrideOf(data)), data, bufferUsageHint);
+            Length = data.Length;
+            _prep = prep;
+        }
+
+        #endregion Constructors
+
+        #region Destructors
+
+        ~VertexBuffer() {
+            Dispose();
+        }
+
+        #endregion Destructors
+
+        #region Methods
+
+        public void Render(PrimitiveType primitiveType = PrimitiveType.Points) {
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _id);
+
+            _prep.Invoke();
+
+            GL.DrawArrays(primitiveType, 0, Length);
+        }
+
+        public void Dispose() {
+            if (IsDisposed) return;
+            try {
+                GL.DeleteBuffer(_id);
+            } catch (Exception e) {
+                Console.WriteLine(e);
+            }
+            IsDisposed = true;
+        }
+
+        #endregion Methods
+    }
 }
-

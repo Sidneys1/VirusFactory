@@ -1,101 +1,88 @@
 using System;
 using System.Collections.Generic;
 
-namespace FortuneVoronoi
-{
-	/// <summary>
-	/// Set für effizienten Zugriff auf Objekte. Objete werden als Key abgelegt, value ist nur ein dummy-Objekt.
-	/// </summary>
-	[Serializable]
-	public class HashSet<T> : ICollection<T>
-	{
-		readonly Dictionary<T, object> _core;
-		// ReSharper disable once StaticMemberInGenericType
-		static readonly object Dummy = new object();
+namespace FortuneVoronoi {
 
-		public HashSet(IEnumerable<T> source)
-			: this()
-		{
-			AddRange(source);
-		}
+    /// <summary>
+    /// Set für effizienten Zugriff auf Objekte. Objete werden als Key abgelegt, value ist nur ein dummy-Objekt.
+    /// </summary>
+    [Serializable]
+    public class HashSet<T> : ICollection<T> {
+        private readonly Dictionary<T, object> _core;
 
-		public HashSet(IEqualityComparer<T> eqComp)
-		{
-			_core = new Dictionary<T, object>(eqComp);
-		}
-		public HashSet()
-		{
-			_core = new Dictionary<T, object>();
-		}
+        // ReSharper disable once StaticMemberInGenericType
+        private static readonly object Dummy = new object();
 
-		public bool Add(T o)
-		{
-			var count = _core.Count;
-			_core[o] = Dummy;
-			return count != _core.Count;
-		}
+        public HashSet(IEnumerable<T> source)
+            : this() {
+            AddRange(source);
+        }
 
-		public bool Contains(T o)
-		{
-			return _core.ContainsKey(o);
-		}
+        public HashSet(IEqualityComparer<T> eqComp) {
+            _core = new Dictionary<T, object>(eqComp);
+        }
 
-		public bool Remove(T o)
-		{
-			return _core.Remove(o);
-		}
+        public HashSet() {
+            _core = new Dictionary<T, object>();
+        }
 
-		[Obsolete]
-		public void AddRange(System.Collections.IEnumerable list)
-		{
-			foreach(T o in list)
-				Add(o);
-		}
+        public bool Add(T o) {
+            var count = _core.Count;
+            _core[o] = Dummy;
+            return count != _core.Count;
+        }
 
-		public void AddRange(IEnumerable<T> list)
-		{
-			foreach(var o in list)
-				Add(o);
-		}
+        public bool Contains(T o) {
+            return _core.ContainsKey(o);
+        }
 
-		public void Clear()
-		{
-			_core.Clear();
-		}
+        public bool Remove(T o) {
+            return _core.Remove(o);
+        }
 
-		#region IEnumerable<T> Members
+        [Obsolete]
+        public void AddRange(System.Collections.IEnumerable list) {
+            foreach (T o in list)
+                Add(o);
+        }
 
-		public IEnumerator<T> GetEnumerator()
-		{
-			return _core.Keys.GetEnumerator();
-		}
+        public void AddRange(IEnumerable<T> list) {
+            foreach (var o in list)
+                Add(o);
+        }
 
-		#endregion
+        public void Clear() {
+            _core.Clear();
+        }
 
-		#region ICollection<T> Members
+        #region IEnumerable<T> Members
 
-		public bool IsSynchronized => false;
+        public IEnumerator<T> GetEnumerator() {
+            return _core.Keys.GetEnumerator();
+        }
 
-		public int Count => _core.Count;
+        #endregion IEnumerable<T> Members
 
-		public void CopyTo(T[] array, int index)
-		{
-			_core.Keys.CopyTo(array,index);
-		}
+        #region ICollection<T> Members
 
-		public bool IsReadOnly => false;
+        public bool IsSynchronized => false;
 
-		#endregion
+        public int Count => _core.Count;
 
+        public void CopyTo(T[] array, int index) {
+            _core.Keys.CopyTo(array, index);
+        }
 
-		void ICollection<T>.Add(T item)
-		{
-			Add(item);
-		}
+        public bool IsReadOnly => false;
 
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-		{
-			return _core.Keys.GetEnumerator();
-		}
-	}
+        #endregion ICollection<T> Members
+
+        void ICollection<T>.Add(T item) {
+            Add(item);
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
+            return _core.Keys.GetEnumerator();
+        }
+    }
 }

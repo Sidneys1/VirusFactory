@@ -2,28 +2,28 @@
  *
  *    MIConvexHull, Copyright (C) 2014 David Sehnal, Matthew Campbell
  *
- *  This library is free software; you can redistribute it and/or modify it 
- *  under the terms of  the GNU Lesser General Public License as published by 
- *  the Free Software Foundation; either version 2.1 of the License, or 
+ *  This library is free software; you can redistribute it and/or modify it
+ *  under the terms of  the GNU Lesser General Public License as published by
+ *  the Free Software Foundation; either version 2.1 of the License, or
  *  (at your option) any later version.
  *
- *  This library is distributed in the hope that it will be useful, 
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of 
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
  *  General Public License for more details.
- *  
+ *
  *****************************************************************************/
 
-using System.Linq;
 using MIConvexHull.ConvexHull.Collections;
+using System.Linq;
 
-namespace MIConvexHull.ConvexHull
-{
-	/// <summary>
+namespace MIConvexHull.ConvexHull {
+
+    /// <summary>
     /// For deferred face addition.
     /// </summary>
-    sealed class DeferredFace
-    {
+    internal sealed class DeferredFace {
+
         /// <summary>
         /// The faces.
         /// </summary>
@@ -38,8 +38,8 @@ namespace MIConvexHull.ConvexHull
     /// <summary>
     /// A helper class used to connect faces.
     /// </summary>
-    sealed class FaceConnector
-    {
+    internal sealed class FaceConnector {
+
         /// <summary>
         /// The face.
         /// </summary>
@@ -74,8 +74,7 @@ namespace MIConvexHull.ConvexHull
         /// Ctor.
         /// </summary>
         /// <param name="dimension"></param>
-        public FaceConnector(int dimension)
-        {
+        public FaceConnector(int dimension) {
             Vertices = new int[dimension - 1];
         }
 
@@ -85,24 +84,20 @@ namespace MIConvexHull.ConvexHull
         /// <param name="face"></param>
         /// <param name="edgeIndex"></param>
         /// <param name="dim"></param>
-        public void Update(ConvexFaceInternal face, int edgeIndex, int dim)
-        {
+        public void Update(ConvexFaceInternal face, int edgeIndex, int dim) {
             Face = face;
             EdgeIndex = edgeIndex;
 
             uint hashCode = 23;
 
-            unchecked
-            {
+            unchecked {
                 var vs = face.Vertices;
                 int i, c = 0;
-                for (i = 0; i < edgeIndex; i++)
-                {
+                for (i = 0; i < edgeIndex; i++) {
                     Vertices[c++] = vs[i];
                     hashCode += 31 * hashCode + (uint)vs[i];
                 }
-                for (i = edgeIndex + 1; i < vs.Length; i++)
-                {
+                for (i = edgeIndex + 1; i < vs.Length; i++) {
                     Vertices[c++] = vs[i];
                     hashCode += 31 * hashCode + (uint)vs[i];
                 }
@@ -118,13 +113,12 @@ namespace MIConvexHull.ConvexHull
         /// <param name="b"></param>
         /// <param name="dim"></param>
         /// <returns></returns>
-        public static bool AreConnectable(FaceConnector a, FaceConnector b, int dim)
-        {
+        public static bool AreConnectable(FaceConnector a, FaceConnector b, int dim) {
             if (a.HashCode != b.HashCode) return false;
 
-	        var av = a.Vertices;
+            var av = a.Vertices;
             var bv = b.Vertices;
-	        return !av.Where((t, i) => t != bv[i]).Any();
+            return !av.Where((t, i) => t != bv[i]).Any();
         }
 
         /// <summary>
@@ -132,24 +126,22 @@ namespace MIConvexHull.ConvexHull
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
-        public static void Connect(FaceConnector a, FaceConnector b)
-        {
+        public static void Connect(FaceConnector a, FaceConnector b) {
             a.Face.AdjacentFaces[a.EdgeIndex] = b.Face.Index;
             b.Face.AdjacentFaces[b.EdgeIndex] = a.Face.Index;
         }
     }
 
     /// <summary>
-    /// This internal class manages the faces of the convex hull. It is a 
+    /// This internal class manages the faces of the convex hull. It is a
     /// separate class from the desired user class.
     /// </summary>
-    sealed class ConvexFaceInternal
-    {
+    internal sealed class ConvexFaceInternal {
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ConvexFaceInternal"/> class.
         /// </summary>
-        public ConvexFaceInternal(int dimension, int index, IndexBuffer beyondList)
-        {
+        public ConvexFaceInternal(int dimension, int index, IndexBuffer beyondList) {
             Index = index;
             AdjacentFaces = new int[dimension];
             VerticesBeyond = beyondList;
@@ -176,12 +168,12 @@ namespace MIConvexHull.ConvexHull
         /// The furthest vertex.
         /// </summary>
         public int FurthestVertex;
-                
+
         /// <summary>
         /// Gets or sets the vertices.
         /// </summary>
         public int[] Vertices;
-        
+
         /// <summary>
         /// Gets or sets the normal vector.
         /// </summary>

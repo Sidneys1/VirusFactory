@@ -2,27 +2,27 @@
  *
  *    MIConvexHull, Copyright (C) 2014 David Sehnal, Matthew Campbell
  *
- *  This library is free software; you can redistribute it and/or modify it 
- *  under the terms of  the GNU Lesser General Public License as published by 
- *  the Free Software Foundation; either version 2.1 of the License, or 
+ *  This library is free software; you can redistribute it and/or modify it
+ *  under the terms of  the GNU Lesser General Public License as published by
+ *  the Free Software Foundation; either version 2.1 of the License, or
  *  (at your option) any later version.
  *
- *  This library is distributed in the hope that it will be useful, 
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of 
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
  *  General Public License for more details.
- *  
+ *
  *****************************************************************************/
 
-namespace MIConvexHull.ConvexHull
-{
+namespace MIConvexHull.ConvexHull {
+
     /// <summary>
     /// A convex face representation containing adjacency information.
     /// </summary>
     public abstract class ConvexFace<TVertex, TFace>
         where TVertex : IVertex
-        where TFace : ConvexFace<TVertex, TFace>
-    {
+        where TFace : ConvexFace<TVertex, TFace> {
+
         /// <summary>
         /// Adjacency. Array of length "dimension".
         /// If F = Adjacency[i] then the vertices shared with F are Vertices[j] where j != i.
@@ -48,7 +48,6 @@ namespace MIConvexHull.ConvexHull
     /// </summary>
     /// <typeparam name="TVertex"></typeparam>
     public class DefaultConvexFace<TVertex> : ConvexFace<TVertex, DefaultConvexFace<TVertex>>
-        where TVertex : IVertex
-    {
+        where TVertex : IVertex {
     }
 }

@@ -1,51 +1,51 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using VirusFactory.Model.Interface;
 
-namespace VirusFactory.Model.Algorithm
-{
-	public class Path<T> : IEnumerable<T>, IFormattable where T : ICoordinate {
-		public T LastStep { get; }
+namespace VirusFactory.Model.Algorithm {
 
-		public T FirstStep => PreviousSteps != null ? PreviousSteps.FirstStep : LastStep;
+    public class Path<T> : IEnumerable<T>, IFormattable where T : ICoordinate {
 
-		public Path<T> FirstPath => PreviousSteps != null ? PreviousSteps.FirstPath : this;  
+        public T LastStep { get; }
 
-		public Path<T> PreviousSteps { get; set; }
-		public double TotalCost { get; }
+        public T FirstStep => PreviousSteps != null ? PreviousSteps.FirstStep : LastStep;
 
-		private Path(T lastStep, Path<T> previousSteps, double totalCost) {
-			LastStep = lastStep;
-			PreviousSteps = previousSteps;
-			TotalCost = totalCost;
-		}
+        public Path<T> FirstPath => PreviousSteps != null ? PreviousSteps.FirstPath : this;
 
-		public Path(T start) : this(start, null, 0) {
-		}
+        public Path<T> PreviousSteps { get; set; }
 
-		public Path<T> AddStep(T step, double stepCost) {
-			return new Path<T>(step, this, TotalCost + stepCost);
-		}
+        public double TotalCost { get; }
 
-		public IEnumerator<T> GetEnumerator() {
-			for (var p = this; p != null; p = p.PreviousSteps)
-				yield return p.LastStep;
-		}
+        private Path(T lastStep, Path<T> previousSteps, double totalCost) {
+            LastStep = lastStep;
+            PreviousSteps = previousSteps;
+            TotalCost = totalCost;
+        }
 
-		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        public Path(T start) : this(start, null, 0) {
+        }
 
-		public override string ToString()
-		{
-			return PreviousSteps != null
-				? $"{PreviousSteps} ({TotalCost - PreviousSteps.TotalCost:#})→ {LastStep}"
-				: LastStep.ToString();
-		}
+        public Path<T> AddStep(T step, double stepCost) {
+            return new Path<T>(step, this, TotalCost + stepCost);
+        }
 
-		public string ToString(string format, IFormatProvider formatProvider) {
-			return PreviousSteps == null ? LastStep.ToString() : $"{PreviousSteps.ToString(format, formatProvider)} -> {LastStep}";
-			//var diff = (TotalCost - PreviousSteps.TotalCost).ToString(format, formatProvider);
-		}
-	}
+        public IEnumerator<T> GetEnumerator() {
+            for (var p = this; p != null; p = p.PreviousSteps)
+                yield return p.LastStep;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        public override string ToString() {
+            return PreviousSteps != null
+                ? $"{PreviousSteps} ({TotalCost - PreviousSteps.TotalCost:#})→ {LastStep}"
+                : LastStep.ToString();
+        }
+
+        public string ToString(string format, IFormatProvider formatProvider) {
+            return PreviousSteps == null ? LastStep.ToString() : $"{PreviousSteps.ToString(format, formatProvider)} -> {LastStep}";
+            //var diff = (TotalCost - PreviousSteps.TotalCost).ToString(format, formatProvider);
+        }
+    }
 }

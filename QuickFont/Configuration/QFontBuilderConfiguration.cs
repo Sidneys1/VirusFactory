@@ -1,45 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace QuickFont {
 
-namespace QuickFont
-{
+    public enum TextGenerationRenderHint {
 
-
-    public enum TextGenerationRenderHint
-    {
         /// <summary>
         /// Use AntiAliasGridFit when rendering the ttf character set to create the QFont texture
         /// </summary>
         AntiAliasGridFit,
+
         /// <summary>
         /// Use AntiAlias when rendering the ttf character set to create the QFont texture
         /// </summary>
         AntiAlias,
+
         /// <summary>
         /// Use ClearTypeGridFit if the font is smaller than 12, otherwise use AntiAlias
         /// </summary>
         SizeDependent,
+
         /// <summary>
         /// Use ClearTypeGridFit when rendering the ttf character set to create the QFont texture
         /// </summary>
         ClearTypeGridFit,
+
         /// <summary>
         /// Use SystemDefault when rendering the ttf character set to create the QFont texture
         /// </summary>
         SystemDefault
-    } 
+    }
 
     /// <summary>
     /// What settings to use when building the font
     /// </summary>
-    public class QFontBuilderConfiguration : QFontConfiguration
-    {
+    public class QFontBuilderConfiguration : QFontConfiguration {
 
         /// <summary>
         /// Whether to use super sampling when building font texture pages
-        /// 
-        /// 
+        ///
+        ///
         /// </summary>
         public int SuperSampleLevels = 1;
 
@@ -65,7 +62,7 @@ namespace QuickFont
         /// their texture page
         /// </summary>
         public int GlyphMargin = 2;
-       
+
         /// <summary>
         /// Set of characters to support
         /// </summary>
@@ -76,11 +73,13 @@ namespace QuickFont
         /// </summary>
         public TextGenerationRenderHint TextGenerationRenderHint = TextGenerationRenderHint.SizeDependent;
 
+        public QFontBuilderConfiguration() {
+        }
 
-        public QFontBuilderConfiguration() { }
-        public QFontBuilderConfiguration(bool addDropShadow) : this(addDropShadow, false) { }
-        public QFontBuilderConfiguration(bool addDropShadow, bool TransformToOrthogProjection)
-        {
+        public QFontBuilderConfiguration(bool addDropShadow) : this(addDropShadow, false) {
+        }
+
+        public QFontBuilderConfiguration(bool addDropShadow, bool TransformToOrthogProjection) {
             if (addDropShadow)
                 this.ShadowConfig = new QFontShadowConfiguration();
             this.TransformToCurrentOrthogProjection = TransformToOrthogProjection;

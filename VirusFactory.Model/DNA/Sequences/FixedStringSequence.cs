@@ -1,31 +1,27 @@
-﻿namespace VirusFactory.Model.DNA.Sequences
-{
-	public class FixedStringSequence : StringSequence
-	{
-		private readonly int _length;
+﻿namespace VirusFactory.Model.DNA.Sequences {
 
-		public FixedStringSequence(int length, string s = null)
-		{
-			_length = length;
+    public class FixedStringSequence : StringSequence {
+        private readonly int _length;
 
-			if (s != null)
-				// ReSharper disable once DoNotCallOverridableMethodsInConstructor
-				SetValue(s);
-		}
+        public FixedStringSequence(int length, string s = null) {
+            _length = length;
 
-		public override string GetValue()
-		{
-			return base.GetValue().Trim('\0');
-		}
-		
-		public override void SetValue(string value)
-		{
-			if (value.Length > _length)
-				value = value.Substring(0, _length);
-			else if (value.Length < _length)
-				value = value + '\0';
+            if (s != null)
+                // ReSharper disable once DoNotCallOverridableMethodsInConstructor
+                SetValue(s);
+        }
 
-			base.SetValue(value);
-		}
-	}
+        public override string GetValue() {
+            return base.GetValue().Trim('\0');
+        }
+
+        public override void SetValue(string value) {
+            if (value.Length > _length)
+                value = value.Substring(0, _length);
+            else if (value.Length < _length)
+                value = value + '\0';
+
+            base.SetValue(value);
+        }
+    }
 }

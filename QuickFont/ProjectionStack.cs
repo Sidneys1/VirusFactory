@@ -1,46 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using OpenTK;
-using OpenTK.Graphics.OpenGL;
+﻿using OpenTK;
 using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
+using System.Collections.Generic;
 
+namespace QuickFont {
 
-namespace QuickFont
-{
-
-    public struct Viewport
-    {
+    public struct Viewport {
         public int X, Y, Width, Height;
-        public Viewport(int X, int Y, int Width, int Height) { this.X = X; this.Y = Y; this.Width = Width; this.Height = Height; }
+
+        public Viewport(int X, int Y, int Width, int Height) {
+            this.X = X; this.Y = Y; this.Width = Width; this.Height = Height;
+        }
     }
 
-    public struct TransformViewport
-    {
+    public struct TransformViewport {
         public float X, Y, Width, Height;
-        public TransformViewport(float X, float Y, float Width, float Height) { this.X = X; this.Y = Y; this.Width = Width; this.Height = Height; }
+
+        public TransformViewport(float X, float Y, float Width, float Height) {
+            this.X = X; this.Y = Y; this.Width = Width; this.Height = Height;
+        }
     }
 
-    class ProjectionStack
-    {
+    internal class ProjectionStack {
+
         public static bool Begun { get; private set; }
 
         private static Stack<Viewport?> cachedViewportStack = new Stack<Viewport?>();
-        static ProjectionStack()
-        {
+
+        static ProjectionStack() {
             Begun = false;
             cachedViewportStack.Push(null);
         }
 
-
         //The currently set viewport
         public static Viewport? CurrentViewport {
             get {
-                lock (cachedViewportStack)
-                {
+                lock (cachedViewportStack) {
                     var currentViewport = cachedViewportStack.Peek();
-                    if (currentViewport == null)
-                    {
+                    if (currentViewport == null) {
                         UpdateCurrentViewportFromHardware();
                         currentViewport = cachedViewportStack.Peek();
                     }
@@ -50,10 +47,8 @@ namespace QuickFont
             }
         }
 
-        public static void UpdateCurrentViewportFromHardware()
-        {
-            lock (cachedViewportStack)
-            {
+        public static void UpdateCurrentViewportFromHardware() {
+            lock (cachedViewportStack) {
                 GraphicsContext.Assert();
                 Viewport viewport = new Viewport();
                 GL.GetInteger(GetPName.Viewport, out viewport.X);
@@ -62,40 +57,30 @@ namespace QuickFont
             }
         }
 
-        public static void PushSoftwareViewport(Viewport viewport)
-        {
-            lock (cachedViewportStack)
-            {
+        public static void PushSoftwareViewport(Viewport viewport) {
+            lock (cachedViewportStack) {
                 cachedViewportStack.Push(viewport);
             }
         }
 
-        public static void PopSoftwareViewport()
-        {
-            lock (cachedViewportStack)
-            {
+        public static void PopSoftwareViewport() {
+            lock (cachedViewportStack) {
                 cachedViewportStack.Pop();
             }
         }
 
-
-        public static void InvalidateViewport()
-        {
-            lock (cachedViewportStack)
-            {
+        public static void InvalidateViewport() {
+            lock (cachedViewportStack) {
                 cachedViewportStack.Pop();
                 cachedViewportStack.Push(null);
             }
         }
 
-
-        public static void GetCurrentOrthogProjection(out bool isOrthog, out float left, out float right, out float bottom, out float top)
-        {
+        public static void GetCurrentOrthogProjection(out bool isOrthog, out float left, out float right, out float bottom, out float top) {
             Matrix4 matrix = new Matrix4();
             GL.GetFloat(GetPName.ProjectionMatrix, out matrix.Row0.X);
 
-            if (matrix.M11 == 0 || matrix.M22 == 0)
-            {
+            if (matrix.M11 == 0 || matrix.M22 == 0) {
                 isOrthog = false;
                 left = right = bottom = top = 0;
                 return;
@@ -114,10 +99,7 @@ namespace QuickFont
                 matrix.M44 == 1f;
         }
 
-
-        public static void Begin()
-        {
-
+        public static void Begin() {
             GraphicsContext.Assert();
 
             Viewport currentVp = (Viewport)CurrentViewport;
@@ -132,11 +114,9 @@ namespace QuickFont
             GL.LoadIdentity();
 
             Begun = true;
-
         }
 
-        public static void End()
-        {
+        public static void End() {
             GraphicsContext.Assert();
 
             GL.MatrixMode(MatrixMode.Modelview);
@@ -147,15 +127,9 @@ namespace QuickFont
 
             GL.MatrixMode(MatrixMode.Modelview);
 
-			GL.Disable(EnableCap.Texture2D);
-			GL.Disable(EnableCap.Blend);
-			Begun = false;
+            GL.Disable(EnableCap.Texture2D);
+            GL.Disable(EnableCap.Blend);
+            Begun = false;
         }
-
-
-
-
-
-
     }
 }

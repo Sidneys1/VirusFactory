@@ -2,22 +2,22 @@
  *
  *    MIConvexHull, Copyright (C) 2014 David Sehnal, Matthew Campbell
  *
- *  This library is free software; you can redistribute it and/or modify it 
- *  under the terms of  the GNU Lesser General Public License as published by 
- *  the Free Software Foundation; either version 2.1 of the License, or 
+ *  This library is free software; you can redistribute it and/or modify it
+ *  under the terms of  the GNU Lesser General Public License as published by
+ *  the Free Software Foundation; either version 2.1 of the License, or
  *  (at your option) any later version.
  *
- *  This library is distributed in the hope that it will be useful, 
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of 
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
  *  General Public License for more details.
- *  
+ *
  *****************************************************************************/
 
 using MIConvexHull.ConvexHull.Algorithm;
 
-namespace MIConvexHull.ConvexHull
-{
+namespace MIConvexHull.ConvexHull {
+
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -25,8 +25,8 @@ namespace MIConvexHull.ConvexHull
     /// <summary>
     /// Factory class for computing convex hulls.
     /// </summary>
-    public static class ConvexHull
-    {
+    public static class ConvexHull {
+
         /// <summary>
         /// Creates a convex hull of the input data.
         /// </summary>
@@ -37,8 +37,7 @@ namespace MIConvexHull.ConvexHull
         /// <returns></returns>
         public static ConvexHull<TVertex, TFace> Create<TVertex, TFace>(IList<TVertex> data, ConvexHullComputationConfig config = null)
             where TVertex : IVertex
-            where TFace : ConvexFace<TVertex, TFace>, new()
-        {
+            where TFace : ConvexFace<TVertex, TFace>, new() {
             return ConvexHull<TVertex, TFace>.Create(data, config);
         }
 
@@ -50,8 +49,7 @@ namespace MIConvexHull.ConvexHull
         /// <param name="config">If null, default ConvexHullComputationConfig is used.</param>
         /// <returns></returns>
         public static ConvexHull<TVertex, DefaultConvexFace<TVertex>> Create<TVertex>(IList<TVertex> data, ConvexHullComputationConfig config = null)
-            where TVertex : IVertex
-        {
+            where TVertex : IVertex {
             return ConvexHull<TVertex, DefaultConvexFace<TVertex>>.Create(data, config);
         }
 
@@ -61,8 +59,7 @@ namespace MIConvexHull.ConvexHull
         /// <param name="data"></param>
         /// <param name="config">If null, default ConvexHullComputationConfig is used.</param>
         /// <returns></returns>
-        public static ConvexHull<DefaultVertex, DefaultConvexFace<DefaultVertex>> Create(IList<double[]> data, ConvexHullComputationConfig config = null)
-        {
+        public static ConvexHull<DefaultVertex, DefaultConvexFace<DefaultVertex>> Create(IList<double[]> data, ConvexHullComputationConfig config = null) {
             var points = data.Select(p => new DefaultVertex { Position = p.ToArray() }).ToList();
             return ConvexHull<DefaultVertex, DefaultConvexFace<DefaultVertex>>.Create(points, config);
         }
@@ -75,8 +72,8 @@ namespace MIConvexHull.ConvexHull
     /// <typeparam name="TFace"></typeparam>
     public class ConvexHull<TVertex, TFace>
         where TVertex : IVertex
-        where TFace : ConvexFace<TVertex, TFace>, new()
-    {
+        where TFace : ConvexFace<TVertex, TFace>, new() {
+
         /// <summary>
         /// Points of the convex hull.
         /// </summary>
@@ -93,8 +90,7 @@ namespace MIConvexHull.ConvexHull
         /// <param name="data"></param>
         /// <param name="config">If null, default ConvexHullComputationConfig is used.</param>
         /// <returns></returns>
-        public static ConvexHull<TVertex, TFace> Create(IList<TVertex> data, ConvexHullComputationConfig config)
-        {
+        public static ConvexHull<TVertex, TFace> Create(IList<TVertex> data, ConvexHullComputationConfig config) {
             if (data == null) throw new ArgumentNullException(nameof(data));
             return ConvexHullInternal.GetConvexHull<TVertex, TFace>(data, config);
         }
@@ -102,9 +98,7 @@ namespace MIConvexHull.ConvexHull
         /// <summary>
         /// Can only be created using a factory method.
         /// </summary>
-        internal ConvexHull()
-        {
-
+        internal ConvexHull() {
         }
     }
 }
