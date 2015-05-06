@@ -10,7 +10,7 @@ using VirusFactory.OpenTK.FSM.Interface;
 
 namespace VirusFactory.OpenTK.FSM.Elements {
 
-    public abstract class UiElement : GameElementBase, IBehavioral<GameTriggers, UiElement>, IRenderable, IInputtable {
+    public abstract class UiElement : GameElementBase, IBehavioral<UiElement>, IRenderable, IKeyboardInput, IMouseInput, IResizable {
 
         #region Properties
 
@@ -32,7 +32,7 @@ namespace VirusFactory.OpenTK.FSM.Elements {
 
         public virtual Color4 Color => MouseOverColor.HasValue && IsMouseOver ? MouseOverColor.Value : NormalColor;
 
-        public MultiMap<GameTriggers, Behaviour<GameTriggers, UiElement>> Behaviours { get; } = new MultiMap<GameTriggers, Behaviour<GameTriggers, UiElement>>();
+        public MultiMap<int, Behaviour<UiElement>> Behaviours { get; } = new MultiMap<int, Behaviour<UiElement>>();
 
         public Dictionary<string, object> AttachedProperties { get; } = new Dictionary<string, object>();
 
@@ -64,7 +64,7 @@ namespace VirusFactory.OpenTK.FSM.Elements {
         public virtual void KeyPress(KeyPressEventArgs e) {
         }
 
-        public virtual void KeyUp(KeyPressEventArgs e) {
+        public virtual void KeyUp(KeyboardKeyEventArgs e) {
         }
 
         public virtual void MouseDown(MouseButtonEventArgs e) {
@@ -96,7 +96,7 @@ namespace VirusFactory.OpenTK.FSM.Elements {
         public virtual void MouseWheel(MouseWheelEventArgs e) {
         }
 
-        public void Trigger(GameTriggers trigger) {
+        public void Trigger(int trigger) {
             if (!Behaviours.ContainsKey(trigger)) return;
             foreach (var behaviourBase in Behaviours[trigger]) {
                 behaviourBase.Action.Invoke(this);
@@ -104,5 +104,9 @@ namespace VirusFactory.OpenTK.FSM.Elements {
         }
 
         #endregion Methods
+
+        public virtual void Resize() {
+            
+        }
     }
 }

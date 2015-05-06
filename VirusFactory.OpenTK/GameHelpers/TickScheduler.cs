@@ -24,14 +24,15 @@ namespace VirusFactory.OpenTK.GameHelpers {
                     }
                 }
             }
-            toRetire.ForEach(o => TickItems.Remove(o));
+            toRetire.ForEach(o => { TickItems.Remove(o); o.Retire(); });
             _retiredItems.AddRange(toRetire);
         }
 
         private static bool RunTick(GameWindow sender, FrameEventArgs e, TickItem tickItem, List<TickItem> toRetire) {
-            tickItem.Action.Invoke(sender, e);
+            tickItem.TotalTime += TimeSpan.FromSeconds(e.Time);
+            tickItem.Action.Invoke(tickItem, sender, e);
             tickItem.LastCall = DateTime.Now;
-            if (tickItem.RunLimit <= 0 || ++tickItem.Count != tickItem.RunLimit) return false;
+            if (tickItem.RunLimit <= 0 | ++tickItem.Count < tickItem.RunLimit) return false;
             toRetire.Add(tickItem);
             return true;
         }

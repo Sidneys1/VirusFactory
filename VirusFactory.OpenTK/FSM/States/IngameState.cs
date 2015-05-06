@@ -1,11 +1,12 @@
-﻿using OpenTK;
+﻿using MoreLinq;
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Input;
 using QuickFont;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using GFSM;
 using VirusFactory.Model.Geography;
 using VirusFactory.OpenTK.FSM.Elements;
 using VirusFactory.OpenTK.FSM.Interface;
@@ -13,9 +14,7 @@ using VirusFactory.OpenTK.GameHelpers;
 using VirusFactory.OpenTK.GameHelpers.VBOHelper;
 
 namespace VirusFactory.OpenTK.FSM.States {
-
-    public class IngameState : GameStateBase, IUpdateable, IResizable {
-
+    public class IngameState : GameStateBase, IResizable, IKeyboardInput {
         #region Fields
 
         private readonly TextElement _debugText;
@@ -32,22 +31,11 @@ namespace VirusFactory.OpenTK.FSM.States {
 
         #region Properties
 
-        public override Transition[] ToThisTransitions { get; }
-        = {
-            new Transition(Command.Deactivate, typeof(IngameState), typeof(MainMenuState)),
-            new Transition(Command.Deactivate, typeof(IngameState), typeof(PauseMenuState))
-        };
-
-        public override Transition[] FromThisTransitions { get; }
-        = {
-            new Transition(Command.Pause, typeof(PauseMenuState), typeof(IngameState))
-        };
-
         public World World { get; set; }
 
         #endregion Properties
 
-        #region Constructors
+        #region Ctor / Dtor
 
         public IngameState(GameWindow owner, GameFiniteStateMachine parent) : base(owner, parent) {
             _debugText = new TextElement(owner, "debug me", ".\\fonts\\pixelmix_micro.ttf", 6f) {
@@ -57,7 +45,7 @@ namespace VirusFactory.OpenTK.FSM.States {
             };
         }
 
-        #endregion Constructors
+        #endregion Ctor / Dtor
 
         #region Methods
 
@@ -88,7 +76,9 @@ namespace VirusFactory.OpenTK.FSM.States {
             SetViewport();
         }
 
-        public void UpdateFrame(FrameEventArgs e) {
+        public override void UpdateFrame(FrameEventArgs e) {
+            base.UpdateFrame(e);
+
             _debugText.Text =
                 $"TPS: {Math.Ceiling(Owner.UpdateFrequency):0000} ({Owner.UpdateTime * 1000:0.000}ms/tick), FPS: {Math.Ceiling(Owner.RenderFrequency):0000} ({Owner.RenderTime * 1000:00.000}ms/frame)";
         }
@@ -227,6 +217,21 @@ namespace VirusFactory.OpenTK.FSM.States {
             }
 
             _viewPort = new Bounds { Bottom = b, Left = l, Right = r, Top = t };
+        }
+
+        public void KeyDown(KeyboardKeyEventArgs e) {
+            GameElements.OfType<IKeyboardInput>().ForEach(o => o.KeyDown(e));
+        }
+
+        public void KeyPress(KeyPressEventArgs e) {
+            GameElements.OfType<IKeyboardInput>().ForEach(o => o.KeyPress(e));
+        }
+
+        public void KeyUp(KeyboardKeyEventArgs e) {
+            GameElements.OfType<IKeyboardInput>().ForEach(o => o.KeyUp(e));
+
+            if (e.Key == Key.Escape)
+                StateMachine.Transition("pause");
         }
 
         #endregion Methods

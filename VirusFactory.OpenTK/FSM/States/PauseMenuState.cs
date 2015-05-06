@@ -1,24 +1,69 @@
-﻿using OpenTK;
-using System;
-using GFSM;
+﻿using System.Linq;
+using Behaviorals;
+using MoreLinq;
+using OpenTK;
+using OpenTK.Graphics;
+using VirusFactory.OpenTK.FSM.Behaviours;
+using VirusFactory.OpenTK.FSM.Elements;
+using VirusFactory.OpenTK.FSM.States.Base;
 
 namespace VirusFactory.OpenTK.FSM.States {
 
-    public class PauseMenuState : GameStateBase {
+    public class PauseMenuState : MenuStateBase {
 
         public PauseMenuState(GameWindow owner, GameFiniteStateMachine parent) : base(owner, parent) {
-        }
+            var uiElementBehavior = new Behaviour<UiElement>(o => {
+                var floatPos = BehaviorHelpers.EaseMouse(o.MousePosition);
+                o.PositionAdd = floatPos/((float) o.AttachedProperties["floatiness"]);
+            });
 
-        public override Transition[] ToThisTransitions { get; }
+            var resumeButton = new TextElement(owner, "resume", ".\\fonts\\toxica.ttf", 40f) {
+                NormalColor = Color4.Gray,
+                Position = new Vector2(0f, -0.4f),
+                Behaviours = {{GameTriggers.MouseMove, uiElementBehavior}},
+                AttachedProperties = {{"floatiness", 50f}},
+                MouseOverColor = Color4.White
+            };
 
-        public override Transition[] FromThisTransitions { get; }
+            resumeButton.Clicked += args => TransitionOut("return");
 
-        public override void Enter() {
-            throw new NotImplementedException();
-        }
+            var settingsButton = new TextElement(owner, "settings", ".\\fonts\\toxica.ttf", 40f) {
+                NormalColor = Color4.Gray,
+                Position = new Vector2(0f, -0.15f),
+                Behaviours = {{GameTriggers.MouseMove, uiElementBehavior}},
+                AttachedProperties = {{"floatiness", 50f}},
+                MouseOverColor = Color4.White,
+            };
+            settingsButton.Clicked += args => TransitionOut("settings");
 
-        public override void Exit() {
-            throw new NotImplementedException();
+            var mainMenuButton = new TextElement(owner, "main menu", ".\\fonts\\toxica.ttf", 40f) {
+                NormalColor = Color4.Gray,
+                Position = new Vector2(0f, 0.1f),
+                Behaviours = { { GameTriggers.MouseMove, uiElementBehavior } },
+                AttachedProperties = { { "floatiness", 50f } },
+                MouseOverColor = Color4.White,
+            };
+            mainMenuButton.Clicked += args => TransitionOut("main menu");
+
+            var exitButton = new TextElement(owner, "exit", ".\\fonts\\toxica.ttf", 40f) {
+                NormalColor = Color4.Gray,
+                Position = new Vector2(0f, 0.35f),
+                Behaviours = {{GameTriggers.MouseMove, uiElementBehavior}},
+                AttachedProperties = {{"floatiness", 50f}},
+                MouseOverColor = Color4.White,
+            };
+            exitButton.Clicked += args => StateMachine.Transition("exit");
+
+            GameElements.Add(new TextElement(owner, "Game Paused", ".\\fonts\\toxica.ttf", 72f) {
+                NormalColor = Color4.DarkRed,
+                Behaviours = {{GameTriggers.MouseMove, uiElementBehavior}},
+                AttachedProperties = {{"floatiness", 25f}},
+                Position = new Vector2(0f, -0.75f)
+            });
+            GameElements.Add(resumeButton);
+            GameElements.Add(exitButton);
+            GameElements.Add(settingsButton);
+            GameElements.Add(mainMenuButton);
         }
     }
 }

@@ -1,11 +1,12 @@
-﻿using GFSM;
+﻿using System;
+using GFSM;
 using OpenTK;
 using OpenTK.Input;
 using VirusFactory.OpenTK.FSM.Interface;
 
 namespace VirusFactory.OpenTK.FSM {
 
-    public class GameFiniteStateMachine : FiniteStateMachine<GameStateBase>, IUpdateable, IRenderable, IInputtable, IResizable {
+    public class GameFiniteStateMachine : FiniteStateMachine<GameStateBase>, IUpdateable, IRenderable, IKeyboardInput, IResizable {
 
         #region Methods
 
@@ -20,51 +21,51 @@ namespace VirusFactory.OpenTK.FSM {
         }
 
         public void RenderFrame(FrameEventArgs e) {
-            CurrState?.RenderFrame(e);
+            CurrentState?.RenderFrame(e);
         }
 
         public void UpdateFrame(FrameEventArgs e) {
-            (CurrState as IUpdateable)?.UpdateFrame(e);
+            (CurrentState as IUpdateable)?.UpdateFrame(e);
         }
 
         public void KeyDown(KeyboardKeyEventArgs e) {
-            (CurrState as IInputtable)?.KeyDown(e);
+            (CurrentState as IKeyboardInput)?.KeyDown(e);
         }
 
         public void KeyPress(KeyPressEventArgs e) {
-            (CurrState as IInputtable)?.KeyPress(e);
+            (CurrentState as IKeyboardInput)?.KeyPress(e);
         }
 
-        public void KeyUp(KeyPressEventArgs e) {
-            (CurrState as IInputtable)?.KeyUp(e);
+        public void KeyUp(KeyboardKeyEventArgs e) {
+            (CurrentState as IKeyboardInput)?.KeyUp(e);
         }
 
         public void MouseDown(MouseButtonEventArgs e) {
-            (CurrState as IInputtable)?.MouseDown(e);
+            (CurrentState as IMouseInput)?.MouseDown(e);
         }
 
         public void MouseUp(MouseButtonEventArgs e) {
-            (CurrState as IInputtable)?.MouseUp(e);
+            (CurrentState as IMouseInput)?.MouseUp(e);
         }
 
         public void MouseEnter() {
-            (CurrState as IInputtable)?.MouseEnter();
+            (CurrentState as IMouseInput)?.MouseEnter();
         }
 
         public void MouseLeave() {
-            (CurrState as IInputtable)?.MouseLeave();
+            (CurrentState as IMouseInput)?.MouseLeave();
         }
 
         public void MouseMove(MouseMoveEventArgs e) {
-            (CurrState as IInputtable)?.MouseMove(e);
+            (CurrentState as IMouseInput)?.MouseMove(e);
         }
 
         public void MouseWheel(MouseWheelEventArgs e) {
-            (CurrState as IInputtable)?.MouseWheel(e);
+            (CurrentState as IMouseInput)?.MouseWheel(e);
         }
         
         public void Resize() {
-            (CurrState as IResizable)?.Resize();
+            (CurrentState as IResizable)?.Resize();
         }
         
         #endregion Methods

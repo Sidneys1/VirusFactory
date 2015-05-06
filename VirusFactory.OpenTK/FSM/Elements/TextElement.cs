@@ -81,14 +81,7 @@ namespace VirusFactory.OpenTK.FSM.Elements {
             }
         }
 
-        public override RectangleF Bounds {
-            get {
-                if (Dynamic || _bounds == RectangleF.Empty)
-                    _bounds = new RectangleF(new PointF(Position.X - (Size.Width / 2), Position.Y), Size);
-
-                return _bounds;
-            }
-        }
+        public override RectangleF Bounds => new RectangleF(new PointF(Position.X - (Size.Width / 2), Position.Y), Size);
 
         #endregion Properties
 
@@ -140,6 +133,11 @@ namespace VirusFactory.OpenTK.FSM.Elements {
 
         public override string ToString() {
             return Text;
+        }
+
+        public override void Resize() {
+            base.Resize();
+            QFont.InvalidateViewport();
         }
 
         #endregion Methods

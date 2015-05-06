@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using GFSM;
 using VirusFactory.Model.Algorithm;
 using VirusFactory.Model.Geography;
 using VirusFactory.OpenTK.FSM;
@@ -17,7 +18,6 @@ using VirusFactory.OpenTK.GameHelpers;
 using VirusFactory.OpenTK.GameHelpers.VBOHelper;
 
 // ReSharper disable PossibleUnintendedReferenceComparison
-
 // ReSharper disable AccessToDisposedClosure
 
 namespace VirusFactory.OpenTK {
@@ -49,20 +49,56 @@ namespace VirusFactory.OpenTK {
         private static void Main() {
             var fsm = new GameFiniteStateMachine();
             using (var game = new GameWindow(1280, 720, new GraphicsMode(32, 24, 0, 8))) {
-                var mainMenuState = new MainMenuState(game, fsm);
+                GameStateBase mainMenuState, ingameState, settingsMenuState, pauseMenuState;
+
+                mainMenuState = new MainMenuState(game, fsm);
+                ingameState = new IngameState(game, fsm);
+                settingsMenuState = new SettingMenuState(game, fsm);
+                pauseMenuState = new PauseMenuState(game, fsm);
+
                 fsm.States.Add(mainMenuState);
-                fsm.States.Add(new IngameState(game, fsm));
-                fsm.Transition(mainMenuState);
+                fsm.States.Add(ingameState);
+                fsm.States.Add(settingsMenuState);
+                fsm.States.Add(pauseMenuState);
+
+                fsm.AddTransition(new Transition<GameStateBase>("init", null, mainMenuState));
+                fsm.AddTransition(new Transition<GameStateBase>("start", mainMenuState, ingameState));
+                fsm.AddTransition(new Transition<GameStateBase>("settings", mainMenuState, settingsMenuState));
+                fsm.AddTransition(new Transition<GameStateBase>("settings", pauseMenuState, settingsMenuState));
+                fsm.AddTransition(new Transition<GameStateBase>("pause", ingameState, pauseMenuState));
+                fsm.AddTransition(new Transition<GameStateBase>("main menu", pauseMenuState, mainMenuState, Mode.Pop));
+
+                fsm.AddTransition(new Transition<GameStateBase>("return", settingsMenuState, mainMenuState, Mode.Pop));
+                fsm.AddTransition(new Transition<GameStateBase>("return", settingsMenuState, pauseMenuState, Mode.Pop));
+                fsm.AddTransition(new Transition<GameStateBase>("return", pauseMenuState, ingameState, Mode.Pop));
+
+                fsm.AddTransition(new Transition<GameStateBase>("exit", mainMenuState, null));
+                fsm.AddTransition(new Transition<GameStateBase>("exit", pauseMenuState, null));
+
+                fsm.Transitioned += t => { if (t.To == null) game.Exit(); };
+
+                fsm.Transition("init");
 
                 game.Load += (sender, args) => fsm.Load();
+                game.Unload += (sender, args) => fsm.UnLoad();
+
                 game.KeyDown += (sender, args) => fsm.KeyDown(args);
+                game.KeyUp += (sender, args) => fsm.KeyUp(args);
+                game.KeyPress += (sender, args) => fsm.KeyPress(args);
+                
                 game.MouseMove += (sender, args) => fsm.MouseMove(args);
-                game.UpdateFrame += (sender, args) => fsm.UpdateFrame(args);
                 game.MouseDown += (sender, args) => fsm.MouseDown(args);
                 game.MouseUp += (sender, args) => fsm.MouseUp(args);
+                game.MouseEnter += (sender, args) => fsm.MouseEnter();
+                game.MouseLeave += (sender, args) => fsm.MouseLeave();
+                game.MouseWheel += (sender, args) => fsm.MouseWheel(args);
+
+
                 game.Resize += (sender, args) => fsm.Resize();
+
                 game.RenderFrame += (sender, args) => fsm.RenderFrame(args);
-                game.Unload += (sender, args) => fsm.UnLoad();
+
+                game.UpdateFrame += (sender, args) => fsm.UpdateFrame(args);
 
                 game.Run(30, 60);
             }
@@ -198,7 +234,7 @@ namespace VirusFactory.OpenTK {
             _elapsed += args.Time;
         }
 
-        private static void UpdatePath(GameWindow sender, FrameEventArgs e) {
+        private static void UpdatePath(TickItem sender, GameWindow game, FrameEventArgs e) {
             _selectedCountry = _countries.RandomSubset(2).ToArray();
 
             var pathingCities = new[] {
@@ -285,7 +321,7 @@ namespace VirusFactory.OpenTK {
             });
         }
 
-        private static unsafe void UpdateVbos(GameWindow sender, FrameEventArgs e) {
+        private static unsafe void UpdateVbos(TickItem sender, GameWindow game, FrameEventArgs e) {
             GL.BindBuffer(BufferTarget.ArrayBuffer, _citiesBuffer.Id);
             var videoMemoryIntPtr = GL.MapBuffer(BufferTarget.ArrayBuffer, BufferAccess.ReadWrite);
             var videoMemory = (BufferElement*)videoMemoryIntPtr.ToPointer();

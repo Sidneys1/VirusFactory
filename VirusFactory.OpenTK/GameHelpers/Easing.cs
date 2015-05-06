@@ -13,8 +13,6 @@ namespace VirusFactory.OpenTK.GameHelpers {
     }
 
     public static class Easing {
-        // Adapted from source : http://www.robertpenner.com/easing/
-
         #region Methods
 
         public static float Ease(double linearStep, float acceleration, EasingType type) {

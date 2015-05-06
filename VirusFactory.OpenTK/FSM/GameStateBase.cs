@@ -7,7 +7,7 @@ using VirusFactory.OpenTK.FSM.Interface;
 
 namespace VirusFactory.OpenTK.FSM {
 
-    public abstract class GameStateBase : State, IRenderable {
+    public abstract class GameStateBase : State<GameStateBase>, IRenderable, IUpdateable, IResizable {
 
         #region Fields
 
@@ -18,16 +18,13 @@ namespace VirusFactory.OpenTK.FSM {
         #region Properties
 
         public List<GameElementBase> GameElements { get; } = new List<GameElementBase>();
-
-        public GameFiniteStateMachine StateMachine { get; }
-
+        
         #endregion Properties
 
         #region Constructors
 
-        protected GameStateBase(GameWindow owner, GameFiniteStateMachine parent) : base(StateMode.Active) {
+        protected GameStateBase(GameWindow owner, GameFiniteStateMachine parent) : base(parent) {
             Owner = owner;
-            StateMachine = parent;
         }
 
         #endregion Constructors
@@ -47,5 +44,13 @@ namespace VirusFactory.OpenTK.FSM {
         }
 
         #endregion Methods
+
+        public virtual void UpdateFrame(FrameEventArgs e) {
+            GameElements.OfType<IUpdateable>().ForEach(o=>o.UpdateFrame(e));
+        }
+
+        public virtual void Resize() {
+            GameElements.OfType<IResizable>().ForEach(o=>o.Resize());
+        }
     }
 }

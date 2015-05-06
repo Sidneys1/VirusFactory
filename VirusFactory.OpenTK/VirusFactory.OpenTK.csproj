@@ -36,12 +36,6 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Behaviorals">
-      <HintPath>..\..\Behaviorals\Behaviorals\bin\Debug\Behaviorals.dll</HintPath>
-    </Reference>
-    <Reference Include="GFSM">
-      <HintPath>..\..\GFSM\GFSM\bin\Debug\GFSM.dll</HintPath>
-    </Reference>
     <Reference Include="MoreLinq, Version=1.0.16107.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
       <HintPath>..\packages\morelinq.2.0.0-alpha01\lib\net35\MoreLinq.dll</HintPath>
       <Private>True</Private>
@@ -59,16 +53,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FSM\Behaviours\BehaviorHelpers.cs" />
     <Compile Include="FSM\Behaviours\GameTriggers.cs" />
     <Compile Include="FSM\Elements\TextElement.cs" />
     <Compile Include="FSM\Elements\UiElement.cs" />
     <Compile Include="FSM\Elements\VboElement.cs" />
     <Compile Include="FSM\GameFiniteStateMachine.cs" />
-    <Compile Include="FSM\Interface\IInputtable.cs" />
+    <Compile Include="FSM\Interface\IKeyboardInput.cs" />
+    <Compile Include="FSM\Interface\IMouseInput.cs" />
     <Compile Include="FSM\Interface\IResizable.cs" />
     <Compile Include="FSM\States\IngameState.cs" />
     <Compile Include="FSM\States\MainMenuState.cs" />
+    <Compile Include="FSM\States\Base\MenuStateBase.cs" />
     <Compile Include="FSM\States\PauseMenuState.cs" />
+    <Compile Include="FSM\States\SettingMenuState.cs" />
     <Compile Include="GameHelpers\Easing.cs" />
     <Compile Include="GameHelpers\MultiMap.cs" />
     <Compile Include="GameHelpers\RectangleD.cs" />
@@ -92,6 +90,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Behaviorals\Behaviorals\Behaviorals.csproj">
+      <Project>{673a719c-de08-47a2-b28d-a13b02b44a90}</Project>
+      <Name>Behaviorals</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\GFSM\GFSM\GFSM.csproj">
+      <Project>{1449297b-2145-4452-9c08-79e02d532dd0}</Project>
+      <Name>GFSM</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FortuneVoronoi\FortuneVoronoi.csproj">
       <Project>{ddf5d740-6ee1-44ba-9db9-782bf23e28d6}</Project>
       <Name>FortuneVoronoi</Name>
