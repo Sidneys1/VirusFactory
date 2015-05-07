@@ -3,6 +3,7 @@ using OpenTK;
 using System.Collections.Generic;
 using System.Linq;
 using GFSM;
+using OpenTK.Graphics.OpenGL;
 using VirusFactory.OpenTK.FSM.Interface;
 
 namespace VirusFactory.OpenTK.FSM {
@@ -50,6 +51,7 @@ namespace VirusFactory.OpenTK.FSM {
         }
 
         public virtual void Resize() {
+            GL.Viewport(0, 0, Owner.Width, Owner.Height);
             GameElements.OfType<IResizable>().ForEach(o=>o.Resize());
         }
     }

@@ -84,7 +84,6 @@ namespace VirusFactory.OpenTK.FSM.States {
         }
 
         public void Resize() {
-            GL.Viewport(0, 0, Owner.Width, Owner.Height);
             QFont.InvalidateViewport();
             SetViewport();
         }

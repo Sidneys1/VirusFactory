@@ -100,6 +100,10 @@ namespace VirusFactory.OpenTK {
 
                 game.UpdateFrame += (sender, args) => fsm.UpdateFrame(args);
 
+                game.Title = "Apoplexy";
+                
+                game.Icon = new Icon("Grim Reaper.ico");
+
                 game.Run(30, 60);
             }
 
