@@ -1,9 +1,12 @@
 ﻿namespace VirusFactory.OpenTK.FSM.Interface {
 
-    public interface ILoadable {
+	public interface ILoadable {
+		#region Public Methods
 
-        void Load();
+		void Load();
 
-        void UnLoad();
-    }
+		void UnLoad();
+
+		#endregion Public Methods
+	}
 }

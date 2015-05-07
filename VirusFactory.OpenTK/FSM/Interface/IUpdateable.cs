@@ -2,8 +2,11 @@
 
 namespace VirusFactory.OpenTK.FSM.Interface {
 
-    public interface IUpdateable {
+	public interface IUpdateable {
+		#region Public Methods
 
-        void UpdateFrame(FrameEventArgs e);
-    }
+		void UpdateFrame(FrameEventArgs e);
+
+		#endregion Public Methods
+	}
 }

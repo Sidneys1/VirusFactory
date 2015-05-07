@@ -2,12 +2,16 @@
 using OpenTK.Input;
 
 namespace VirusFactory.OpenTK.FSM.Interface {
-    public interface IKeyboardInput {
 
-        void KeyDown(KeyboardKeyEventArgs e);
+	public interface IKeyboardInput {
+		#region Public Methods
 
-        void KeyPress(KeyPressEventArgs e);
+		void KeyDown(KeyboardKeyEventArgs e);
 
-        void KeyUp(KeyboardKeyEventArgs e);
-    }
+		void KeyPress(KeyPressEventArgs e);
+
+		void KeyUp(KeyboardKeyEventArgs e);
+
+		#endregion Public Methods
+	}
 }

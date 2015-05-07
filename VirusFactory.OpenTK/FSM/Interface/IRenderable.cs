@@ -2,8 +2,8 @@
 
 namespace VirusFactory.OpenTK.FSM.Interface {
 
-    public interface IRenderable : ILoadable {
+	public interface IRenderable : ILoadable {
 
-        void RenderFrame(FrameEventArgs e);
-    }
+		void RenderFrame(FrameEventArgs e);
+	}
 }

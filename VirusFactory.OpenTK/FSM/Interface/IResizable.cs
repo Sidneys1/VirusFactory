@@ -1,7 +1,7 @@
 ﻿namespace VirusFactory.OpenTK.FSM.Interface {
 
-    public interface IResizable {
+	public interface IResizable {
 
-        void Resize();
-    }
+		void Resize();
+	}
 }

@@ -1,30 +1,34 @@
 ﻿using OpenTK;
 using OpenTK.Graphics.OpenGL;
-using System;
+using VirusFactory.OpenTK.FSM.Elements.Base;
 using VirusFactory.OpenTK.FSM.Interface;
 using VirusFactory.OpenTK.GameHelpers.VBOHelper;
 
 namespace VirusFactory.OpenTK.FSM.Elements {
+	public class VboElement<T> : GameElementBase, IRenderable where T : struct {
+		#region Public Properties
 
-    public class VboElement<T> : GameElementBase, IUpdateable, IRenderable where T : struct {
+		public VertexBuffer<T> Buffer { get; set; }
+		
+		public PrimitiveType PrimitiveType { get; }
 
-        public VertexBuffer<T> Buffer { get; }
+		#endregion Public Properties
 
-        public Action UpdateBuffer { get; set; }
+		#region Public Ctor / Dtor
 
-        public PrimitiveType PrimitiveType { get; }
+		public VboElement(GameWindow owner, VertexBuffer<T> buffer, PrimitiveType ptype) : base(owner) {
+			Buffer = buffer;
+			PrimitiveType = ptype;
+		}
 
-        public VboElement(GameWindow owner, VertexBuffer<T> buffer, PrimitiveType ptype) : base(owner) {
-            Buffer = buffer;
-            PrimitiveType = ptype;
-        }
+		#endregion Public Ctor / Dtor
 
-        public void UpdateFrame(FrameEventArgs e) {
-            // Update VBO
-        }
+		#region Public Methods
+		
+		public void RenderFrame(FrameEventArgs e) {
+			Buffer?.Render(PrimitiveType);
+		}
 
-        public void RenderFrame(FrameEventArgs e) {
-            Buffer.Render(PrimitiveType);
-        }
-    }
+		#endregion Public Methods
+	}
 }

@@ -1,73 +1,71 @@
-﻿using System;
-using GFSM;
+﻿using GFSM;
 using OpenTK;
 using OpenTK.Input;
 using VirusFactory.OpenTK.FSM.Interface;
+using VirusFactory.OpenTK.FSM.States.Base;
 
 namespace VirusFactory.OpenTK.FSM {
+	public class GameFiniteStateMachine : FiniteStateMachine<GameStateBase>, IUpdateable, IRenderable, IKeyboardInput, IResizable {
+		#region Methods
 
-    public class GameFiniteStateMachine : FiniteStateMachine<GameStateBase>, IUpdateable, IRenderable, IKeyboardInput, IResizable {
+		public void Load() {
+			// Load all states
+			States.ForEach(o => o.Load());
+		}
 
-        #region Methods
+		public void UnLoad() {
+			// Load all states
+			States.ForEach(o => o.UnLoad());
+		}
 
-        public void Load() {
-            // Load all states
-            States.ForEach(o => o.Load());
-        }
+		public void RenderFrame(FrameEventArgs e) {
+			CurrentState?.RenderFrame(e);
+		}
 
-        public void UnLoad() {
-            // Load all states
-            States.ForEach(o => o.UnLoad());
-        }
+		public void UpdateFrame(FrameEventArgs e) {
+			(CurrentState as IUpdateable)?.UpdateFrame(e);
+		}
 
-        public void RenderFrame(FrameEventArgs e) {
-            CurrentState?.RenderFrame(e);
-        }
+		public void KeyDown(KeyboardKeyEventArgs e) {
+			(CurrentState as IKeyboardInput)?.KeyDown(e);
+		}
 
-        public void UpdateFrame(FrameEventArgs e) {
-            (CurrentState as IUpdateable)?.UpdateFrame(e);
-        }
+		public void KeyPress(KeyPressEventArgs e) {
+			(CurrentState as IKeyboardInput)?.KeyPress(e);
+		}
 
-        public void KeyDown(KeyboardKeyEventArgs e) {
-            (CurrentState as IKeyboardInput)?.KeyDown(e);
-        }
+		public void KeyUp(KeyboardKeyEventArgs e) {
+			(CurrentState as IKeyboardInput)?.KeyUp(e);
+		}
 
-        public void KeyPress(KeyPressEventArgs e) {
-            (CurrentState as IKeyboardInput)?.KeyPress(e);
-        }
+		public void MouseDown(MouseButtonEventArgs e) {
+			(CurrentState as IMouseInput)?.MouseDown(e);
+		}
 
-        public void KeyUp(KeyboardKeyEventArgs e) {
-            (CurrentState as IKeyboardInput)?.KeyUp(e);
-        }
+		public void MouseUp(MouseButtonEventArgs e) {
+			(CurrentState as IMouseInput)?.MouseUp(e);
+		}
 
-        public void MouseDown(MouseButtonEventArgs e) {
-            (CurrentState as IMouseInput)?.MouseDown(e);
-        }
+		public void MouseEnter() {
+			(CurrentState as IMouseInput)?.MouseEnter();
+		}
 
-        public void MouseUp(MouseButtonEventArgs e) {
-            (CurrentState as IMouseInput)?.MouseUp(e);
-        }
+		public void MouseLeave() {
+			(CurrentState as IMouseInput)?.MouseLeave();
+		}
 
-        public void MouseEnter() {
-            (CurrentState as IMouseInput)?.MouseEnter();
-        }
+		public void MouseMove(MouseMoveEventArgs e) {
+			(CurrentState as IMouseInput)?.MouseMove(e);
+		}
 
-        public void MouseLeave() {
-            (CurrentState as IMouseInput)?.MouseLeave();
-        }
+		public void MouseWheel(MouseWheelEventArgs e) {
+			(CurrentState as IMouseInput)?.MouseWheel(e);
+		}
 
-        public void MouseMove(MouseMoveEventArgs e) {
-            (CurrentState as IMouseInput)?.MouseMove(e);
-        }
+		public void Resize() {
+			(CurrentState as IResizable)?.Resize();
+		}
 
-        public void MouseWheel(MouseWheelEventArgs e) {
-            (CurrentState as IMouseInput)?.MouseWheel(e);
-        }
-        
-        public void Resize() {
-            (CurrentState as IResizable)?.Resize();
-        }
-        
-        #endregion Methods
-    }
+		#endregion Methods
+	}
 }
